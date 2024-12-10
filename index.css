@@ -1,0 +1,132 @@
+h1 {
+    color: black;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+h2 {
+    color: red;
+    font-weight: bolder;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+h2 a {
+    outline: none;
+    text-decoration: none;
+    padding: 2px 1px 0;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+h2 a:link {
+    color: blue;
+}
+
+h2 a:hover {
+    color: blue;
+}
+
+h2 a:visited {
+    color: blue;
+}
+
+a.typewrite {
+    cursor: default;
+}
+
+body {
+    background: url('../images/images.avif') no-repeat center center fixed;
+    background-size: 150%;
+}
+
+#bloc1 {
+    text-align: center;
+    background-color: white;
+    border: solid gray 1px;
+    border-radius: 5px;
+    margin-left: 35%;
+    margin-right: 35%;
+}
+
+#bloc2 {
+    margin: auto;
+}
+
+.g-recaptcha {
+    display: flex;
+    justify-content: center;
+}
+
+.deconnexion {
+    display: flex;
+    justify-content: center;
+}
+
+a {
+    outline: none;
+    text-decoration: none;
+    padding: 2px 1px 0;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+a:link {
+    color: blue;
+}
+
+a:visited {
+    color: blue;
+}
+
+a:hover {
+    color: red;
+}
+
+a:active {
+    color: blue;
+}
+
+/* Secrétaire */
+.bloc {
+    display: flex;
+    justify-content: center;
+    background-color: white;
+}
+
+.item1 {
+    display: flex;
+    justify-content: center;
+}
+
+.item2 {
+    display: flex;
+    justify-content: center;
+}
+
+a input {
+    background-color: white;
+    text-align: center;
+    color: red;
+    text-decoration: none;
+}
+
+/* Images */
+
+img.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#erreur {
+    text-align: center;
+    background-color: white;
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+.centre {
+    text-align: center;
+}
