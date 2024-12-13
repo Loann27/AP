@@ -5,14 +5,22 @@ h1 {
     font-weight: bold;
 }
 
-h2 {
+#bloc1 h2 {
     color: red;
     font-weight: bolder;
     text-transform: uppercase;
     text-align: center;
 }
 
-h2 a {
+#a {
+    color: blue;
+    font-weight: bolder;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+
+#a a {
     outline: none;
     text-decoration: none;
     padding: 2px 1px 0;
@@ -20,15 +28,15 @@ h2 a {
     font-weight: bold;
 }
 
-h2 a:link {
+#a a:link {
     color: blue;
 }
 
-h2 a:hover {
+#a a:hover {
     color: blue;
 }
 
-h2 a:visited {
+#a a:visited {
     color: blue;
 }
 
@@ -129,4 +137,31 @@ img.center {
 
 .centre {
     text-align: center;
+}
+
+/* Boutons */
+#form input[type="submit"] {
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    transition: .5s all ease-in-out;
+}
+
+#form input[type="submit"]:hover {
+    background-color: gray;
+    color: black;
+}
+
+/* Déconnexion */
+
+.deconnexion {
+    background-color: white;
+}
+
+.deconnexion a:link {
+    color: black;
+    text-decoration: none;
 }
