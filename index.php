@@ -16,20 +16,20 @@ error_reporting(E_ALL);
     <body>
         <div id="bloc1">
             <h2>connexion</h2>
-            <form method="POST" action="index.php">
+            <form id="form" method="POST" action="index.php">
                 <label for="id">Identifiant: </label>
                 <input id="id" name="id" type="text" placeholder="Identifiant" required><br><br>
                 <label for="mdp">Mot de passe: </label>
                 <input id="mdp" name="mdp" type="password" placeholder="*********" required><br><br>
                 <div class="g-recaptcha" data-sitekey="6LcQ5kYqAAAAAHVn08OAS8qAI9rC96as-uehQ9xu"></div><br><br>
-                <input type="submit" id="submit" name="submit" value="Connexion" style="background-color: blue;padding: 5px;border: 1px solid black;border-radius: 5px;">
+                <input type="submit" id="submit" name="submit" value="Connexion">
             </form>
         </div>
         
 
 
-<h2>
-  <a onclick="return false;" href="" class="typewrite" data-period="2000" data-type='[ "Bienvenue!", "Veuillez-vous connecter afin de pouvoir utiliser notre application."]'>
+<h2 id="a">
+  <a onclick="return false;" class="typewrite" data-period="2000" data-type='[ "Bienvenue!", "Veuillez-vous connecter afin de pouvoir utiliser notre application.", "Application développée par Loann Picket et Yohann Boniface"]'>
     <span class="wrap"></span>
   </a>
 </h2>
