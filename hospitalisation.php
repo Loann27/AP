@@ -17,6 +17,9 @@ session_start();
                 <div class="centre">
                     <a href="./accueil_secretaire.php"><input type='submit' value='RETOUR'></a>
                 </div>
+                <div id="hide1">
+                    <p id="erreur"></p>
+                </div>
                 <?php
             } else {
                 ?>
