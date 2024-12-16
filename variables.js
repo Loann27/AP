@@ -33,8 +33,10 @@ let doc_vitale;
 let doc_mutuelle;
 let doc_livret;
 let erreur = false;
+show();
 //var xhr = new XMLHttpRequest(); A faire pour AJAX
 pages();
+
 
 function getISODate(){
     const d = new Date();
@@ -46,7 +48,7 @@ function getISODate(){
 
 function pages() {
     if(page == 0) {
-        document.getElementById("affichage").innerHTML = "<img src='../../images/Hospitalisation.png' class='center'>" + "<div id='bloc1'>" + "<form onsubmit='hospitalisation();return false'>" + "<label for='preadmi'>Pré-admission pour:*</label>" + "<select name='preadmi' id='preadmi' required>" + "<option value=''>Choix</option>" + "<option value='Ambulatoire chirurgie'>Ambulatoire chirurgie</option>" + "<option value='Hospitalisation'>Hospitalisation (au moins une nuit)</option>" + "</select><br><br>" + "<label for='date_hospi'>Date hospitalisation:* </label>" + "<input id='date_hospi' name='date_hospi' type='date' onchange='verif()' required><br/>" + "<label for='heure'>Heure de l'intervention (7:00 - 16:30):* </label>" + "<input id='heure' name='heure' type='time' placeholder='--:--' onchange='verif_time(this.value)' required><br><br>" + "<label for='medecin'>Nom du médecin*</label><br>" + "<select name='medecin' id='medecin' required>" + "<option value=''>Choix</option>" + "<option value='Alexandrie Covillon'>Alexandrie COVILLON (Maxillo-facial)</option>" + "<option value='Françoise Marquis'>Françoise MARQUIS (Radiologue)</option>" + "<option value='Hugues Faure'>Hugues FAURE (Neurologue)</option>" + "</select><br><br>" + "<input type='submit' id='submit' name='submit' value='Suivant >'>" + "</form>" + "</div>" + "<div id='erreur'>" + "<p id='aff_erreur'>" + "</div>";
+        document.getElementById("affichage").innerHTML = "<img src='../../images/Hospitalisation.png' class='center'>" + "<div id='bloc1'>" + "<form onsubmit='hospitalisation();return false'>" + "<label for='preadmi'>Pré-admission pour:*</label>" + "<select name='preadmi' id='preadmi' required>" + "<option value=''>Choix</option>" + "<option value='Ambulatoire chirurgie'>Ambulatoire chirurgie</option>" + "<option value='Hospitalisation'>Hospitalisation (au moins une nuit)</option>" + "</select><br><br>" + "<label for='date_hospi'>Date hospitalisation:* </label>" + "<input id='date_hospi' name='date_hospi' type='date' onchange='verif()' required><br/>" + "<label for='heure'>Heure de l'intervention (7:00 - 16:30):* </label>" + "<input id='heure' name='heure' type='time' placeholder='--:--' onchange='verif_time(this.value)' required><br><br>" + "<label for='medecin'>Nom du médecin*</label><br>" + "<select name='medecin' id='medecin' required>" + "<option value=''>Choix</option>" + "<option value='Alexandrie Covillon'>Alexandrie COVILLON (Maxillo-facial)</option>" + "<option value='Françoise Marquis'>Françoise MARQUIS (Radiologue)</option>" + "<option value='Hugues Faure'>Hugues FAURE (Neurologue)</option>" + "</select><br><br>" + "<input type='submit' id='submit' name='submit' value='Suivant >'>" + "</form>" + "</div>";
         document.getElementById('date_hospi').setAttribute('min',getISODate());
     } else if(page == 1) {
         document.getElementById("affichage").innerHTML = "<img src='../../images/Patient.png' class='center'>" + "<div id='bloc1'>" + "<h1>Informations concernant le patient</h1>" + "<form onsubmit='patients();return false'>" + "<label for='civ'>Civ. </label>" + "<select name='civ' id='civ' required>" + "<option value=''>Choix</option>" + "<option value='Homme'>Homme</option>" + "<option value='Femme'>Femme</option>" + "</select><br/>" + "<label for='nom_naissance'>Nom de naissance </label>" + "<input id='nom_naissance' name='nom_naissance' type='text' required><br/>" + "<label for='nom_epouse'>Nom d'épouse </label>" + "<input id='nom_epouse' name='nom_epouse' type='text'><br><br>" + "<label for='prenom'>Prénom </label>" + "<input type='text' id='prenom' name='prenom' required><br/>"  + "<label for='date_naissance'>Date de naissance </label>" + "<input type='date' id='date_naissance' name='date_naissance' required><br><br>" + "<label for='adresse'>Adresse </label>" + "<input type='text' id='adresse' name='adresse' required><br><br>" + "<label for='cp'>Code Postal </label>" + "<input type='tel' id='cp' name='cp' pattern='[0-9]{5}' required><br/>" + "<label for='ville'>Ville </label>" + "<input type='text' id='ville' name='ville' required><br><br>" + "<label for='email'>Email (.com, .fr, .en, .net, .co.uk)</label>" + "<input type='mail' id='email' name='email' required><br/><br/>" + "<label for='telephone'>Téléphone </label>" + "<input type='tel' id='telephone' name='telephone' pattern='[0-9]{10}' required><br><br>" + "<input type='submit' id='submit' name='submit' value='Suivant >'>" + "</form>" + "<input type='submit' onclick='precedent();return false' value='précédent'>" + "</div>";
@@ -56,7 +58,7 @@ function pages() {
     } else if(page == 3) {
         document.getElementById("affichage").innerHTML = "<img src='../../images/Patient.png' class='center'>" + "<div id='bloc1'>" + "<h1>Coordonnées personne de confiance</h1>" + "<form onsubmit='confiance();return false'>" + "<label for='nom_conf'>Nom </label>" + "<input type='text' name='nom_conf' id='nom_conf' required><br/>" + "<label for='pren_conf'>Prénom </label>" + "<input type='text' name='pren_conf' id='pren_conf' required><br/>" + "<label for='tel_conf'>Téléphone </label>" + "<input type='tel' name='tel_conf' id='tel_conf' pattern='[0-9]{10}' required><br/>" + "<label for='adr_conf'>Adresse</label>" + "<input type='text' name='adr_conf' id='adr_conf' required><br/>" + "<input type='submit' name='submit' id='submit' value='Suivant >'>" + "</form>" + "<input type='submit' onclick='precedent();return false' value='précédent'>" + "</div>";
     } else if(page == 4) {
-        document.getElementById("affichage").innerHTML = "<img src='../../images/couvert_sociale.png' class='center'>" + "<div id='bloc1'>" + "<form onsubmit='couv_sociale();return false'>" + "<label for='orga'>Organisme de sécurité sociale / Nom de la caisse d'assurance maladie* </label>" + "<input type='text' name='orga' id='orga' placeholder='Ex: CPAM du Tarn et Garonne, CPAM du Lot, RSI, MSA...' required><br/>" + "<label for='num_secu'>Numéro de sécurité sociale* </label>" + "<input type='tel' name='num_secu' id='num_secu' pattern='[0-9]{13}' required><br/>" + "<label for='assure'>Le patient est-il assuré?* </label>" + "<select name='assure' id='assure' required>" + "<option value=''>Choix</option>" + "<option value='oui'>Oui</option>" + "<option value='non'>Non</option>" + "</select><br/>" + "<label for='ald'>Le patient est-il ALD?* </label>" + "<select name='ald' id='ald' required>" + "<option value=''>Choix</option>" + "<option value='oui'>Oui</option>" + "<option value='non'>Non</option>" + "</select><br/>" + "<label for='nom_mutu'>Nom de la mutuelle ou de l'assurance* </label>" + "<input type='text' name='nom_mutu' id='nom_mutu' required><br/>" + "<label for='num_adherent'>Numéro adhérent* </label>" + "<input type='tel' name='num_adherent' id='num_adherent' required><br/>" + "<label for='chambre_part'>Chambre particulière?* </label>" + "<select name='chambre_part' id='chambre_part' required>" + "<option value=''>Choix</option>" + "<option value='oui'>Oui</option>" + "<option value='non'>Non</option>" + "</select><br/>" + "<input type='submit' name='submit' id='submit' value='Suivant >'>" + "</form>" + "<input type='submit' value='précédent' onclick='precedent();return false'>" + "</div>" + "<div id='erreur'>" + "<p id='aff_erreur'>" + "</div>";
+        document.getElementById("affichage").innerHTML = "<img src='../../images/couvert_sociale.png' class='center'>" + "<div id='bloc1'>" + "<form onsubmit='couv_sociale();return false'>" + "<label for='orga'>Organisme de sécurité sociale / Nom de la caisse d'assurance maladie* </label>" + "<input type='text' name='orga' id='orga' placeholder='Ex: CPAM du Tarn et Garonne, CPAM du Lot, RSI, MSA...' required><br/>" + "<label for='num_secu'>Numéro de sécurité sociale* </label>" + "<input type='tel' name='num_secu' id='num_secu' pattern='[0-9]{15}' required><br/>" + "<label for='assure'>Le patient est-il assuré?* </label>" + "<select name='assure' id='assure' required>" + "<option value=''>Choix</option>" + "<option value='oui'>Oui</option>" + "<option value='non'>Non</option>" + "</select><br/>" + "<label for='ald'>Le patient est-il ALD?* </label>" + "<select name='ald' id='ald' required>" + "<option value=''>Choix</option>" + "<option value='oui'>Oui</option>" + "<option value='non'>Non</option>" + "</select><br/>" + "<label for='nom_mutu'>Nom de la mutuelle ou de l'assurance* </label>" + "<input type='text' name='nom_mutu' id='nom_mutu' required><br/>" + "<label for='num_adherent'>Numéro adhérent* </label>" + "<input type='tel' name='num_adherent' id='num_adherent' required><br/>" + "<label for='chambre_part'>Chambre particulière?* </label>" + "<select name='chambre_part' id='chambre_part' required>" + "<option value=''>Choix</option>" + "<option value='oui'>Oui</option>" + "<option value='non'>Non</option>" + "</select><br/>" + "<input type='submit' name='submit' id='submit' value='Suivant >'>" + "</form>" + "<input type='submit' value='précédent' onclick='precedent();return false'>" + "</div>";
     } else if(page == 5) {
         document.getElementById("affichage").innerHTML = "<img src='../../images/documents.png' class='center'>" + "<div id='bloc1'>" + "<form onsubmit='doc();return false'>" + "<label for='identity'>Carte d'identité (recto / verso):</label>" + "<input type='file' id='identity' accept='.jpg, .png, .pdf' required>" + "<br/>" + "<label for='carteVitale'>Carte vitale:</label>" + "<input type='file' id='carteVitale' accept='.jpg, .png, .pdf' required>" + "<br/>" + "<label for='mutuelle'>Carte de mutuelle:</label>" + "<input type='file' id='mutuelle' name='mutuelle' accept='.jpg, .png, .pdf' required>" + "<br/>" + "<label for='livretFamille'>Livret de famille (pour enfants mineurs):</label>" + "<input type='file' id='livretFamille' name='livretFamille' accept='.jpg, .png, .pdf'>" + "<br/>" + "<input type='submit' name='submit' id='submit' value='Envoyer'>" + "</form>" + "<input type='submit' value='précédent' onclick='precedent();return false'>" + "</div>";
     }
@@ -68,7 +70,7 @@ function hospitalisation() {
     heure = document.getElementById("heure").value;
     medecin = document.getElementById("medecin").value;
     if(erreur == true) {
-        alert("Heure incorrecte!");
+        message4();
         return;
     }
     page = page + 1;
@@ -87,7 +89,6 @@ function verif() {
 function verif_time(time) {
     let [hours, mins] = time.split(":");
     if((hours < 7) || (hours > 16) || (hours == 16 && mins > 30)) {
-        message4();
         erreur = true;
     } else {
         const d = new Date();
@@ -102,12 +103,9 @@ function verif_time(time) {
         const heures = d.getHours();
         const minutes = d.getMinutes();
         const date = document.getElementById("date_hospi").value;
-        log(Today);
         if((heures > hours || (heures == hours && minutes > mins)) && (Today == date)) {
-            message4();
             erreur = true;
         } else {
-            document.getElementById("aff_erreur").innerHTML = "";
             erreur = false;
         }
     }
@@ -126,7 +124,6 @@ function patients() {
     tel = document.getElementById("telephone").value;
     verif_patients();
     if(erreur == true) {
-        alert("Format d'adresse mail incorrect!");
         return;
     }
     page = page + 1;
@@ -136,15 +133,18 @@ function patients() {
 function verif_patients() {
     if(email.includes("@") && (email.endsWith(".com") || email.endsWith(".fr") || email.endsWith(".en") || email.endsWith(".net") || email.endsWith(".co.uk"))) {
         if(email.endsWith("@.com") || email.endsWith("@.fr") || email.endsWith("@.en") || email.endsWith("@.net") || email.endsWith("@.co.uk")) {
+            message6();
             erreur = true;
         } else {
             if(email.startsWith("@")) {
+                message6();
                 erreur = true;
             } else {
                 erreur = false;
             }
         }
     } else {
+        message6();
         erreur = true;
     }
 }
@@ -156,7 +156,7 @@ function prevenir() {
     adr_prev = document.getElementById("adr_prev").value;
     verif_prevenir();
     if(erreur == true) {
-        alert("Le téléphone ne peut pas être celui du patient!");
+        message7();
         return;
     }
     page = page + 1;
@@ -178,7 +178,7 @@ function confiance() {
     adr_conf = document.getElementById("adr_conf").value;
     verif_confiance();
     if(erreur == true) {
-        alert("Le téléphone ne peut pas être celui du patient!");
+        message7();
         return;
     }
     page = page + 1;
@@ -194,7 +194,6 @@ function verif_confiance() {
 }
 
 function couv_sociale() {
-    erreur = false;
     orga = document.getElementById("orga").value;
     num_secu = document.getElementById("num_secu").value;
     assure = document.getElementById("assure").value;
@@ -204,7 +203,6 @@ function couv_sociale() {
     chambre_part = document.getElementById("chambre_part").value;
     verif_num_secu();
     if(erreur == true) {
-        alert("Numéro de sécurité sociale incorrect!");
         return;
     }
     page = page + 1;
@@ -215,20 +213,25 @@ function verif_num_secu() { // Vérification du numéro de sécurité sociale
     const first = num_secu.slice(0,1);
     const first_year = num_secu.slice(1,3);
     const first_month = num_secu.slice(3,5);
+    const verif_cp = cp.slice(0,2);
     const data_birth = new Date(date_nais);
+    const first_cp  = num_secu.slice(5,7);
     const y = data_birth.getFullYear().toString().slice(2,4);
     const x = (data_birth.getMonth() + 1).toString();
     if((first == 1 && civ != "Homme") || (first == 2 && civ != "Femme") || ((first != 1) && (first != 2))) {
         message();
         erreur = true;
-    }
-    if(y != first_year) {
+    } else if(y != first_year) {
         message2();
         erreur = true;
-    }
-    if(x != first_month) {
+    } else if(x != first_month) {
         message3();
         erreur = true;
+    } else if(verif_cp != first_cp) {
+        message5();
+        erreur = true;
+    } else {
+        erreur = false;
     }
 }
 
@@ -245,17 +248,51 @@ function precedent() {
 }
 
 function message() {
-    document.getElementById("aff_erreur").innerHTML = "Numéro de sécurité sociale incompatible avec la civilté!";
+    show();
+    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Numéro de sécurité sociale incompatible avec la civilté!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
 }
 
 function message2() {
-    document.getElementById("aff_erreur").innerHTML = "Numéro de sécurité sociale incompatible avec l'année de naissance!";
+    show();
+    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Numéro de sécurité sociale incompatible avec l'année de naissance!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
 }
 
 function message3() {
-    document.getElementById("aff_erreur").innerHTML = "Numéro de sécurité sociale incompatible avec le mois de naissance!";
+    show();
+    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Numéro de sécurité sociale incompatible avec le mois de naissance!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
 }
 
 function message4() {
-    document.getElementById("aff_erreur").innerHTML = "Heure d'intervention incorrecte!";
+    show();
+    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Heure d'intervention incorrecte!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
+}
+
+function message5() {
+    show();
+    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Numéro de sécurité sociale incompatible avec le code postal!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
+}
+
+function message6() {
+    show();
+    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Le mail est incorrect!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
+}
+
+function message7() {
+    show();
+    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Le numéro de téléphone ne peut pas être celui du patient!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
+}
+
+function cache_erreur() {
+    document.getElementById("erreur").innerHTML = "";
+    show();
+}
+
+function show(){
+    var stats =  document.getElementById("hide1").style.display;
+      
+    if (stats == "none"){
+    document.getElementById("hide1").style.display = "inline-block";
+    } else {
+    document.getElementById("hide1").style.display = "none";  
+    }
 }
