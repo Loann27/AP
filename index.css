@@ -1,8 +1,19 @@
+/* Styles généraux */
+body {
+    background-color: #f2f7fb;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* Titres */
 h1 {
     color: black;
     text-align: center;
     text-transform: uppercase;
     font-weight: bold;
+    margin-top: 30px;
 }
 
 #bloc1 h2 {
@@ -12,98 +23,91 @@ h1 {
     text-align: center;
 }
 
-#a {
-    color: blue;
-    font-weight: bolder;
-    text-transform: uppercase;
-    text-align: center;
-}
-
-
-#a a {
-    outline: none;
-    text-decoration: none;
-    padding: 2px 1px 0;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-#a a:link {
-    color: blue;
-}
-
-#a a:hover {
-    color: blue;
-}
-
-#a a:visited {
-    color: blue;
-}
-
-a.typewrite {
-    cursor: default;
-}
-
-#hide1 {
-    font-weight: bold;
-    position:fixed;
-    left:0;
-    right:0;
-    margin: auto;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
-    width: 70%;
-    height: 70%;
-    padding: 15px;  
-    background: gold;
-    text-align: center;
-    box-sizing: content-box;
-    border: 4px dashed black;
-}
-
-body {
-    background: url('../images/images.avif') no-repeat center center fixed;
-    background-size: 150%;
-}
-
+/* Blocs principaux */
 #bloc1 {
     text-align: center;
     background-color: white;
     border: solid gray 1px;
-    border-radius: 5px;
-    margin-left: 35%;
-    margin-right: 35%;
+    border-radius: 10px;
+    width: 50%;
+    margin: 30px auto;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 #bloc2 {
+    display: flex;
+    justify-content: center;
     margin: auto;
 }
 
-.g-recaptcha {
-    display: flex;
-    justify-content: center;
+/* Boutons */
+button, 
+#form input[type="submit"], 
+#hide1 input[type="submit"] {
+    background-color: #2a5d84;
+    color: white;
+    font-weight: bold;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+button:hover, 
+#form input[type="submit"]:hover, 
+#hide1 input[type="submit"]:hover {
+    background-color: #1d4664;
+}
+
+/* Bloc d'erreur */
+#hide1 {
+    font-weight: bold;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    max-width: 500px;
+    padding: 15px;
+    background: gold;
+    text-align: center;
+    border: 4px dashed black;
+    border-radius: 10px;
+}
+
+/* Captcha et déconnexion */
+.g-recaptcha,
 .deconnexion {
     display: flex;
     justify-content: center;
+    margin-top: 10px;
 }
 
+/* Espacement des blocs de boutons */
+.bloc {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Espacement entre les boutons */
+    flex-wrap: wrap;
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 20px auto;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Liens */
 a {
-    outline: none;
     text-decoration: none;
-    padding: 2px 1px 0;
     text-transform: uppercase;
     font-weight: bold;
 }
 
-a:link {
-    color: blue;
-}
-
-a:visited {
+a:link, a:visited {
     color: blue;
 }
 
@@ -111,93 +115,36 @@ a:hover {
     color: red;
 }
 
-a:active {
-    color: blue;
-}
-
-/* Secrétaire */
-.bloc {
-    display: flex;
-    justify-content: center;
-    background-color: white;
-}
-
-.item1 {
-    display: flex;
-    justify-content: center;
-}
-
-.item2 {
-    display: flex;
-    justify-content: center;
-}
-
+/* Liens sous forme de boutons */
 a input {
     background-color: white;
     text-align: center;
     color: red;
-    text-decoration: none;
+    border: none;
+    font-weight: bold;
 }
 
 /* Images */
-
 img.center {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    max-width: 100%;
+    height: auto;
 }
 
+/* Message d'erreur */
 #erreur {
     text-align: center;
     background-color: white;
-    margin-left: 25%;
-    margin-right: 25%;
+    width: 50%;
+    margin: 20px auto;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Centrage */
 .centre {
     text-align: center;
-}
-
-/* Boutons */
-#form input[type="submit"] {
-    background-color: blue;
-    color: white;
-    font-weight: bold;
-    padding: 5px;
-    border: 1px solid black;
-    border-radius: 5px;
-    transition: .5s all ease-in-out;
-}
-
-#form input[type="submit"]:hover {
-    background-color: gray;
-    color: black;
-}
-
-/* Déconnexion */
-
-.deconnexion {
-    background-color: white;
-}
-
-.deconnexion a:link {
-    color: black;
-    text-decoration: none;
-}
-
-/* erreur */
-
-#hide1 input[type="submit"] {
-    background-color: blue;
-    color: white;
-    font-weight: bold;
-    padding: 5px;
-    border: 1px solid black;
-    border-radius: 5px;
-    transition: .5s all ease-in-out;
-}
-
-#hide1 input[type="submit"]:hover {
-    background-color: gray;
-    color: black;
 }

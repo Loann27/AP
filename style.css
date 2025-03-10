@@ -1,0 +1,57 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f7fb;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #2a5d84;
+    margin-bottom: 40px;
+}
+
+section {
+    background-color: #fff;
+    padding: 20px;
+    margin: 50px auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    text-align: center;
+}
+
+h2 {
+    color: #2a5d84;
+    margin-top: 0;
+}
+
+/* Conteneur des boutons */
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px; /* Augmente l’espace entre les boutons */
+    margin-top: 20px;
+}
+
+/* Style des boutons */
+button {
+    background-color: #2a5d84;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    min-width: 220px; /* Légèrement plus large */
+    text-align: center;
+    margin: 10px; /* Ajoute encore plus d’espace entre les boutons */
+}
+
+button:hover {
+    background-color: #1d4664;
+}
+
