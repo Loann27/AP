@@ -29,7 +29,7 @@ error_reporting(E_ALL);
 
 
 <h2 id="a">
-  <a onclick="return false;" class="typewrite" data-period="2000" data-type='[ "Bienvenue!", "Veuillez-vous connecter afin de pouvoir utiliser notre application.", "Application développée par Loann Picket et Yohann Boniface"]'>
+  <a onclick="return false;" class="typewrite" data-period="2000" data-type='[ "Bienvenue!", "Veuillez-vous connecter afin de pouvoir utiliser notre application.", "Application développée par Loann Piquet et Yohann Boniface"]'>
     <span class="wrap"></span>
   </a>
 </h2>
@@ -54,7 +54,7 @@ error_reporting(E_ALL);
             $serveur = "localhost";
             $utilisateur = "root";
             $motDePasse = "sio2024";
-            $nomBDD = "Hopital";
+            $nomBDD = "hopital";
 
             try {
                 $connexion = new PDO("mysql:host=$serveur;dbname=$nomBDD", $utilisateur, $motDePasse);
