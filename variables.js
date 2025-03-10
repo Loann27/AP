@@ -5,7 +5,7 @@ let heure;
 let medecin;
 let civ;
 let nom_nais;
-let nom_ep;
+let nom_ep = "";
 let pren;
 let date_nais;
 let adr;
@@ -34,7 +34,7 @@ let doc_mutuelle;
 let doc_livret;
 let erreur = false;
 show();
-//var xhr = new XMLHttpRequest(); A faire pour AJAX
+let xhttp = new XMLHttpRequest() // Utilisé pour AJAX
 pages();
 
 
@@ -48,7 +48,7 @@ function getISODate(){
 
 function pages() {
     if(page == 0) {
-        document.getElementById("affichage").innerHTML = "<img src='../../images/Hospitalisation.png' class='center'>" + "<div id='bloc1'>" + "<form onsubmit='hospitalisation();return false'>" + "<label for='preadmi'>Pré-admission pour:*</label>" + "<select name='preadmi' id='preadmi' required>" + "<option value=''>Choix</option>" + "<option value='Ambulatoire chirurgie'>Ambulatoire chirurgie</option>" + "<option value='Hospitalisation'>Hospitalisation (au moins une nuit)</option>" + "</select><br><br>" + "<label for='date_hospi'>Date hospitalisation:* </label>" + "<input id='date_hospi' name='date_hospi' type='date' onchange='verif()' required><br/>" + "<label for='heure'>Heure de l'intervention (7:00 - 16:30):* </label>" + "<input id='heure' name='heure' type='time' placeholder='--:--' onchange='verif_time(this.value)' required><br><br>" + "<label for='medecin'>Nom du médecin*</label><br>" + "<select name='medecin' id='medecin' required>" + "<option value=''>Choix</option>" + "<option value='Alexandrie Covillon'>Alexandrie COVILLON (Maxillo-facial)</option>" + "<option value='Françoise Marquis'>Françoise MARQUIS (Radiologue)</option>" + "<option value='Hugues Faure'>Hugues FAURE (Neurologue)</option>" + "</select><br><br>" + "<input type='submit' id='submit' name='submit' value='Suivant >'>" + "</form>" + "</div>";
+        document.getElementById("affichage").innerHTML = "<img src='../../images/Hospitalisation.png' class='center'>" + "<div id='bloc1'>" + "<form onsubmit='hospitalisation();return false'>" + "<label for='preadmi'>Pré-admission pour:*</label>" + "<select name='preadmi' id='preadmi' required>" + "<option value=''>Choix</option>" + "<option value='Ambulatoire chirurgie'>Ambulatoire chirurgie</option>" + "<option value='Hospitalisation'>Hospitalisation (au moins une nuit)</option>" + "</select><br><br>" + "<label for='date_hospi'>Date hospitalisation:* </label>" + "<input id='date_hospi' name='date_hospi' type='date' onchange='verif()' required><br/>" + "<label for='heure'>Heure de l'intervention (7:00 - 16:30):* </label>" + "<input id='heure' name='heure' type='time' placeholder='--:--' onchange='verif_time(this.value)' required><br><br>" + "<label for='medecin'>Nom du médecin*</label><br>" + "<select name='medecin' id='medecin' required>" + "<option value=''>Choix</option>" + "<option value='COVILLON'>Alexandrie COVILLON (Maxillo-facial)</option>" + "<option value='MARQUIS'>Françoise MARQUIS (Radiologue)</option>" + "<option value='FAURE'>Hugues FAURE (Neurologue)</option>" + "</select><br><br>" + "<input type='submit' id='submit' name='submit' value='Suivant >'>" + "</form>" + "</div>";
         document.getElementById('date_hospi').setAttribute('min',getISODate());
     } else if(page == 1) {
         document.getElementById("affichage").innerHTML = "<img src='../../images/Patient.png' class='center'>" + "<div id='bloc1'>" + "<h1>Informations concernant le patient</h1>" + "<form onsubmit='patients();return false'>" + "<label for='civ'>Civ. </label>" + "<select name='civ' id='civ' required>" + "<option value=''>Choix</option>" + "<option value='Homme'>Homme</option>" + "<option value='Femme'>Femme</option>" + "</select><br/>" + "<label for='nom_naissance'>Nom de naissance </label>" + "<input id='nom_naissance' name='nom_naissance' type='text' required><br/>" + "<label for='nom_epouse'>Nom d'épouse </label>" + "<input id='nom_epouse' name='nom_epouse' type='text'><br><br>" + "<label for='prenom'>Prénom </label>" + "<input type='text' id='prenom' name='prenom' required><br/>"  + "<label for='date_naissance'>Date de naissance </label>" + "<input type='date' id='date_naissance' name='date_naissance' required><br><br>" + "<label for='adresse'>Adresse </label>" + "<input type='text' id='adresse' name='adresse' required><br><br>" + "<label for='cp'>Code Postal </label>" + "<input type='tel' id='cp' name='cp' pattern='[0-9]{5}' required><br/>" + "<label for='ville'>Ville </label>" + "<input type='text' id='ville' name='ville' required><br><br>" + "<label for='email'>Email (.com, .fr, .en, .net, .co.uk)</label>" + "<input type='mail' id='email' name='email' required><br/><br/>" + "<label for='telephone'>Téléphone </label>" + "<input type='tel' id='telephone' name='telephone' pattern='[0-9]{10}' required><br><br>" + "<input type='submit' id='submit' name='submit' value='Suivant >'>" + "</form>" + "<input type='submit' onclick='precedent();return false' value='précédent'>" + "</div>";
@@ -60,7 +60,9 @@ function pages() {
     } else if(page == 4) {
         document.getElementById("affichage").innerHTML = "<img src='../../images/couvert_sociale.png' class='center'>" + "<div id='bloc1'>" + "<form onsubmit='couv_sociale();return false'>" + "<label for='orga'>Organisme de sécurité sociale / Nom de la caisse d'assurance maladie* </label>" + "<input type='text' name='orga' id='orga' placeholder='Ex: CPAM du Tarn et Garonne, CPAM du Lot, RSI, MSA...' required><br/>" + "<label for='num_secu'>Numéro de sécurité sociale* </label>" + "<input type='tel' name='num_secu' id='num_secu' pattern='[0-9]{15}' required><br/>" + "<label for='assure'>Le patient est-il assuré?* </label>" + "<select name='assure' id='assure' required>" + "<option value=''>Choix</option>" + "<option value='oui'>Oui</option>" + "<option value='non'>Non</option>" + "</select><br/>" + "<label for='ald'>Le patient est-il ALD?* </label>" + "<select name='ald' id='ald' required>" + "<option value=''>Choix</option>" + "<option value='oui'>Oui</option>" + "<option value='non'>Non</option>" + "</select><br/>" + "<label for='nom_mutu'>Nom de la mutuelle ou de l'assurance* </label>" + "<input type='text' name='nom_mutu' id='nom_mutu' required><br/>" + "<label for='num_adherent'>Numéro adhérent* </label>" + "<input type='tel' name='num_adherent' id='num_adherent' required><br/>" + "<label for='chambre_part'>Chambre particulière?* </label>" + "<select name='chambre_part' id='chambre_part' required>" + "<option value=''>Choix</option>" + "<option value='oui'>Oui</option>" + "<option value='non'>Non</option>" + "</select><br/>" + "<input type='submit' name='submit' id='submit' value='Suivant >'>" + "</form>" + "<input type='submit' value='précédent' onclick='precedent();return false'>" + "</div>";
     } else if(page == 5) {
-        document.getElementById("affichage").innerHTML = "<img src='../../images/documents.png' class='center'>" + "<div id='bloc1'>" + "<form onsubmit='doc();return false'>" + "<label for='identity'>Carte d'identité (recto / verso):</label>" + "<input type='file' id='identity' accept='.jpg, .png, .pdf' required>" + "<br/>" + "<label for='carteVitale'>Carte vitale:</label>" + "<input type='file' id='carteVitale' accept='.jpg, .png, .pdf' required>" + "<br/>" + "<label for='mutuelle'>Carte de mutuelle:</label>" + "<input type='file' id='mutuelle' name='mutuelle' accept='.jpg, .png, .pdf' required>" + "<br/>" + "<label for='livretFamille'>Livret de famille (pour enfants mineurs):</label>" + "<input type='file' id='livretFamille' name='livretFamille' accept='.jpg, .png, .pdf'>" + "<br/>" + "<input type='submit' name='submit' id='submit' value='Envoyer'>" + "</form>" + "<input type='submit' value='précédent' onclick='precedent();return false'>" + "</div>";
+        document.getElementById("affichage").innerHTML = "<img src='../../images/documents.png' class='center'>" + "<div id='bloc1'>" + "<form onsubmit='doc();return false'>" + "<label for='identity'>Carte d'identité (recto / verso):</label>" + "<input type='file' id='identity' accept='.jpg, .png, .pdf' required>" + "<br/>" + "<label for='carteVitale'>Carte vitale:</label>" + "<input type='file' id='carteVitale' accept='.jpg, .png, .pdf' required>" + "<br/>" + "<label for='mutuelle'>Carte de mutuelle:</label>" + "<input type='file' id='mutuelle' name='mutuelle' accept='.jpg, .png, .pdf' required>" + "<br/>" + "<label for='livretFamille'>Livret de famille (pour enfants mineurs):</label>" + "<input type='file' id='livretFamille' name='livretFamille' accept='.jpg, .png, .pdf'>" + "<br/>" + "<input type='submit' name='submit' id='submit' value='Valider'>" + "</form>" + "<input id='submit' name='submit' type='submit' value='précédent' onclick='precedent();return false'>" + "</div>";
+    } else {
+        document.getElementById("affichage").innerHTML = "<div id='bloc1'>" + "<form method='POST' action='hospitalisation.php'>" + "<input id='submit' name='submit' type='submit' value='Envoyer'>" + "</form>" + "</div>";
     }
 }
 
@@ -240,6 +242,9 @@ function doc() {
     doc_vitale = document.getElementById("carteVitale").value;
     doc_mutuelle = document.getElementById("mutuelle").value;
     doc_livret = document.getElementById("livretFamille").value;
+    ajax();
+    page = page + 1;
+    pages();
 }
 
 function precedent() {
@@ -295,4 +300,383 @@ function show(){
     } else {
     document.getElementById("hide1").style.display = "none";  
     }
+}
+
+function ajax() {
+    ajax1();
+    ajax2();
+    ajax3();
+    ajax4();
+    ajax5();
+    ajax6();
+    ajax7();
+    ajax8();
+    ajax9();
+    ajax10();
+    ajax11();
+    ajax12();
+    ajax13();
+    ajax14();
+    ajax15();
+    ajax16();
+    ajax17();
+    ajax18();
+    ajax19();
+    ajax20();
+    ajax21();
+    ajax22();
+    ajax23();
+    ajax24();
+    ajax25();
+    ajax26();
+    ajax27();
+    ajax28();
+    ajax29();
+}
+
+function ajax1() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ preadmi_ajax: preadmi }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax2() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ date_hospi_ajax: date_hospi }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax3() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ heure_ajax: heure }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax4() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ medecin_ajax: medecin }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax5() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ civ_ajax: civ }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax6() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ nom_nais_ajax: nom_nais }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax7() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ nom_ep_ajax: nom_ep }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax8() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ pren_ajax: pren }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax9() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ date_nais_ajax: date_nais }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax10() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ adr_ajax: adr }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax11() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ cp_ajax: cp }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax12() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ ville_ajax: ville }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax13() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ email_ajax: email }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax14() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ tel_ajax: tel }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax15() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ nom_prev_ajax: nom_prev }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax16() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ pren_prev_ajax: pren_prev }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax17() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ tel_prev_ajax: tel_prev }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax18() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ adr_prev_ajax: adr_prev }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax19() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ orga_ajax: orga }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax20() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ num_secu_ajax: num_secu }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax21() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ assure_ajax: assure }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax22() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ ald_ajax: ald }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax23() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ nom_mutu_ajax: nom_mutu }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax24() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ num_adherent_ajax: num_adherent }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax25() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ chambre_part_ajax: chambre_part }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax26() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ doc_identite_ajax: doc_identite }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax27() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ doc_livret_ajax: doc_livret }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax28() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ doc_mutuelle_ajax: doc_mutuelle }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
+    
+}
+
+function ajax29() {
+    return $.ajax({
+        url: '../pages/PreAdmi/hospitalisation.php',
+        type: 'POST',
+        data: ({ doc_vitale_ajax: doc_vitale }),
+        success: function(data) {
+            console.log(data);
+         }
+    });
 }
