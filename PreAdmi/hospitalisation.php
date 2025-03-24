@@ -8,16 +8,43 @@ session_start();
         <meta charset="utf-8">
         <link href="../../css/index.css" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <style>
+            select {
+                background-color: blue;
+                color: #fff;
+                border: 1px solid black;
+                border-radius: 5px;
+                font-weight: bold;
+                appearance: none;
+                text-align: center;
+            }
+
+            h1 {
+                color: red;
+            }
+
+            input[type="file"], input[type="date"], input[type="time"] {
+                background-color: blue;
+                font-weight: bold;
+                color: #fff;
+                border: 1px solid black;
+                border-radius: 5px;
+            }
+
+            input[type="text"], input[type="tel"] {
+                border: 1px solid black;
+            }
+
+        </style>
     </head>
     <body>
         <?php
         if(isset($_SESSION['compte'])) {
             if(($_SESSION['role'] == 'Secrétaire') || ($_SESSION['role'] == "Admin")) {
                 ?>
-                <img src='../../images/Hospitalisation.png' class='center'>
                 <div id='bloc1'>
                     <h1>Formulaire Pré-Admission</h1>
-                    <form method="POST" action="hospitalisation.php" enctype="multipart/form-data">
+                    <form id="myForm" method="POST" action="hospitalisation.php" enctype="multipart/form-data">
                         <label for='preadmi'>Pré-admission pour:*</label>
                         <select name='preadmi' id='preadmi' required>
                             <option value=''>Choix</option>
@@ -25,9 +52,9 @@ session_start();
                             <option value='Hospitalisation'>Hospitalisation (au moins une nuit)</option>
                         </select><br><br>
                         <label for='date_hospi'>Date hospitalisation:* </label>
-                        <input id='date_hospi' name='date_hospi' type='date' onchange='verif()' required><br/>
+                        <input class="input" id='date_hospi' name='date_hospi' type='date' onchange='verif()' required><br/>
                         <label for='heure'>Heure de l'intervention (7:00 - 16:30):* </label>
-                        <input id='heure' name='heure' type='time' placeholder='--:--' onchange='verif_time(this.value)' required><br><br>
+                        <input class="input" id='heure' name='heure' type='time' placeholder='--:--' onchange='verif_time(this.value)' required><br><br>
                         <label for='medecin'>Nom du médecin*</label><br>
                         <select name='medecin' id='medecin' required>
                             <option value=''>Choix</option>
@@ -57,7 +84,7 @@ session_start();
                         <label for='ville'>Ville </label>
                         <input type='text' id='ville' name='ville' required><br><br>
                         <label for='email'>Email (.com, .fr, .en, .net, .co.uk)</label>
-                        <input type='mail' id='email' name='email' required><br/><br/>
+                        <input class="input" type='mail' id='email' name='email' onchange="verif_patients()" required><br/><br/>
                         <label for='telephone'>Téléphone </label>
                         <input type='tel' id='telephone' name='telephone' pattern='[0-9]{10}' required><br><br>
                         <h1>Coordonnées personne à prévenir</h1>
@@ -66,7 +93,7 @@ session_start();
                         <label for='pren_prev'>Prénom </label>
                         <input type='text' name='pren_prev' id='pren_prev' required><br/>
                         <label for='tel_prev'>Téléphone </label>
-                        <input type='tel' name='tel_prev' id='tel_prev' pattern='[0-9]{10}' required><br/>
+                        <input class="input" type='tel' name='tel_prev' id='tel_prev' pattern='[0-9]{10}' onchange="verif_prevenir()" required><br/>
                         <label for='adr_prev'>Adresse</label>
                         <input type='text' name='adr_prev' id='adr_prev' required><br/>
                         <h1>Coordonnées personne de confiance</h1>
@@ -75,14 +102,14 @@ session_start();
                         <label for='pren_conf'>Prénom </label>
                         <input type='text' name='pren_conf' id='pren_conf' required><br/>
                         <label for='tel_conf'>Téléphone </label>
-                        <input type='tel' name='tel_conf' id='tel_conf' pattern='[0-9]{10}' required><br/>
+                        <input class="input" type='tel' name='tel_conf' id='tel_conf' pattern='[0-9]{10}' onchange="verif_confiance()" required><br/>
                         <label for='adr_conf'>Adresse</label>
                         <input type='text' name='adr_conf' id='adr_conf' required><br/><br/>
                         <h1>Couverture Sociale</h1>
                         <label for='orga'>Organisme de sécurité sociale / Nom de la caisse d'assurance maladie* </label>
                         <input type='text' name='orga' id='orga' placeholder='Ex: CPAM du Tarn et Garonne, CPAM du Lot, RSI, MSA...' required><br/>
                         <label for='num_secu'>Numéro de sécurité sociale* </label>
-                        <input type='tel' name='num_secu' id='num_secu' pattern='[0-9]{15}' required><br/>
+                        <input class="input" type='tel' name='num_secu' id='num_secu' pattern='[0-9]{15}' onchange="verif_num_secu()" required><br/>
                         <label for='assure'>Le patient est-il assuré?* </label>
                         <select name='assure' id='assure' required>
                             <option value=''>Choix</option>
@@ -150,6 +177,10 @@ session_start();
                 }
                 if(isset($_POST['submit'])) {
                     try {
+                        // Ne pas décommenter
+                        //$key = file_get_contents('/var/www/secrets/key.key');
+                        //$cipher = "aes-256-cbc";
+                        //$iv = file_get_contents('/var/www/secrets/iv.iv');
                         $preadmi = $_POST['preadmi'];
                         $date_hospi = $_POST['date_hospi'];
                         $heure = $_POST['heure'];
@@ -183,19 +214,23 @@ session_start();
                         $fileIdentite = file_get_contents($_FILES['identity']['tmp_name']);
                         $baseIdentite = base64_encode($fileIdentite);
                         $doc_identite = 'data:' . $mimeIdentite . ';base64,' . $baseIdentite;
+                        //$doc_identite = openssl_encrypt($doc_identite, $cipher, $key, 0, $iv);
                         $mimeVitale = mime_content_type($_FILES['carteVitale']['tmp_name']);
                         $fileVitale = file_get_contents($_FILES['carteVitale']['tmp_name']);
                         $baseVitale = base64_encode($fileVitale);
                         $doc_vitale = 'data:' . $mimeVitale . ';base64,' . $baseVitale;
+                        //$doc_vitale = openssl_encrypt($doc_vitale, $cipher, $key, 0, $iv);
                         $mimeMutuelle = mime_content_type($_FILES['mutuelle']['tmp_name']);
                         $fileMutuelle = file_get_contents($_FILES['mutuelle']['tmp_name']);
                         $baseMutuelle = base64_encode($fileMutuelle);
                         $doc_mutuelle = 'data:' . $mimeMutuelle . ';base64,' . $baseMutuelle;
+                        //$doc_mutuelle = openssl_encrypt($doc_mutuelle, $cipher, $key, 0, $iv);
                         if(isset($_FILES['livretFamille']) && $_FILES['livretFamille']['size'] > 0) {
                             $mimeLivret = mime_content_type($_FILES['livretFamille']['tmp_name']);
                             $fileLivret = file_get_contents($_FILES['livretFamille']['tmp_name']);
                             $baseLivret = base64_encode($fileLivret);
                             $doc_livret = 'data:' . $mimeLivret . ';base64,' . $baseLivret;
+                            //$doc_livret = openssl_encrypt($doc_livret, $cipher, $key, 0, $iv);
                         }
                         $count = "SELECT count(*) FROM Hospitalisation;";
                         $count2 = "SELECT count(*) FROM Patient;";
@@ -239,15 +274,39 @@ session_start();
                         $id_med_res = $id_med->fetchAll(PDO::FETCH_ASSOC);
                         $id_med1 = $id_med_res[0]['id'];
                         $sql1 = "INSERT INTO Hospitalisation (id_hospitalisation, date_hospi, nom_medecin, chambre) VALUES (:id1, :date_hospi, :medecin, :chambre_part);";
-                        if($nom_ep) {
-                            $sql2 = "INSERT INTO Patient (id_patient, nom_naissance, nom_epouse, prenom, date_naissance, adresse, CP, ville, email, telephone, genre) VALUES (:id_patient1, :nom_nais, :nom_ep, :pren, :date_nais, :adr, :cp, :ville, :email, :tel, :civ);";
-                            $conn2 = $connexion->prepare($sql2);
-                            $conn2->bindParam(':nom_ep', $nom_ep);
+                        $verif = $connexion->prepare("SELECT count(*) FROM Patient WHERE nom_naissance = :nom_nais, nom_epouse = :nom_ep, prenom = :pren, date_naissance, :date_nais, adresse = :adr, CP = :cp, ville = :ville, email = :email, telephone = :tel, genre = :civ;");
+                        $verif->bindParam(':nom_nais', $nom_nais);
+                        $verif->bindParam(':nom_ep', $nom_ep);
+                        $verif->bindParam(':pren', $pren);
+                        $verif->bindParam(':date_nais', $date_nais);
+                        $verif->bindParam(':adr', $adr);
+                        $verif->bindParam(':cp', $cp);
+                        $verif->bindParam(':ville', $ville);
+                        $verif->bindParam(':email', $email);
+                        $verif->bindParam(':tel', $tel);
+                        $verif->bindParam(':civ', $civ);
+                        $verif->execute();
+                        if($verif->fetchColumn() == 0) {
+                            if($nom_ep) {
+                                $sql2 = "INSERT INTO Patient (id_patient, nom_naissance, nom_epouse, prenom, date_naissance, adresse, CP, ville, email, telephone, genre) VALUES (:id_patient1, :nom_nais, :nom_ep, :pren, :date_nais, :adr, :cp, :ville, :email, :tel, :civ);";
+                                $conn2 = $connexion->prepare($sql2);
+                                $conn2->bindParam(':nom_ep', $nom_ep);
+                            } else {
+                                $sql2 = "INSERT INTO Patient (id_patient, nom_naissance, prenom, date_naissance, adresse, CP, ville, email, telephone, genre) VALUES (:id_patient1, :nom_nais, :pren, :date_nais, :adr, :cp, :ville, :email, :tel, :civ);";
+                                $conn2 = $connexion->prepare($sql2);
+                            }
                         } else {
-                            $sql2 = "INSERT INTO Patient (id_patient, nom_naissance, prenom, date_naissance, adresse, CP, ville, email, telephone, genre) VALUES (:id_patient1, :nom_nais, :pren, :date_nais, :adr, :cp, :ville, :email, :tel, :civ);";
-                            $conn2 = $connexion->prepare($sql2);
+                            
                         }
-                        $sql3 = "INSERT INTO Personnepre VALUES (:id_prev1, :nom_prev, :pren_prev, :tel_prev, :adr_prev);";
+                        $verif2 = $connexion->prepare("SELECT count(*) FROM Personnepre WHERE nom = :nom_pre, prenom = :pren_pre, tel = :tel_pre, adresse = :adr_pre;");
+                        $verif2->bindParam(':nom_pre', $nom_prev);
+                        $verif2->bindParam(':pren_pre', $pren_prev);
+                        $verif2->bindParam(':tel_pre', $tel_prev);
+                        $verif2->bindParam('adr_pre', $adr_prev);
+                        $verif2->execute();
+                        if($verif2->fetchColumn() == 0) {
+                            $sql3 = "INSERT INTO Personnepre VALUES (:id_prev1, :nom_prev, :pren_prev, :tel_prev, :adr_prev);";
+                        }
                         $sql4 = "INSERT INTO Personneconf VALUES (:id_conf1, :nom_conf, :pren_conf, :tel_conf, :adr_conf);";
                         if(isset($_POST['livretFamille'])) {
                             $sql5 = "INSERT INTO PieceJointe (id, recto_verso_identite, carte_vitale, carte_mutuelle, livret_famille) VALUES (:id_piece1, :doc_identite, :doc_vitale, :doc_mutuelle, :doc_livret);";
