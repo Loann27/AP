@@ -40,6 +40,32 @@ session_start();
     <body>
         <?php
         if(isset($_SESSION['compte'])) {
+            ini_set('display_errors', 1);
+            ini_set('display_startup_errors', 1);
+            error_reporting(E_ALL);
+            $serveur = "localhost";
+            $utilisateur = "root";
+            $motDePasse = "sio2024";
+            $nomBDD = "hopital";
+            try {
+                $connexion = new PDO("mysql:host=$serveur;dbname=$nomBDD", $utilisateur, $motDePasse);
+                $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $table = "Professionnel";
+                $donnee1 = "id";
+                $donnee2 = "identifiant";
+                $donnee3 = "mdp";
+                $donnee5 = "nom";
+                $donnee6 = "id_role";
+    
+                $requete = $connexion->prepare("SELECT $donnee1, $donnee2, $donnee3 FROM $table");
+                $requete->execute();
+                $resultats = $requete->fetchAll(PDO::FETCH_ASSOC);
+            }catch (PDOException $e) {
+                echo "Echec de la connexion à la base de donnée : " . $e->getMessage();
+            }
+            $select = "SELECT Professionnel.nom AS nom_medecin, Professionnel.prenom AS prenom_medecin, Services.nom AS nom_service FROM Professionnel INNER JOIN Services ON Professionnel.id_service = Services.id_service WHERE Professionnel.id_role IN (2, 3);";
+            $select_res = $connexion->prepare($select);
+            $select_res->execute();
             if(($_SESSION['role'] == 'Secrétaire') || ($_SESSION['role'] == "Admin")) {
                 ?>
                 <div id='bloc1'>
@@ -58,9 +84,13 @@ session_start();
                         <label for='medecin'>Nom du médecin*</label><br>
                         <select name='medecin' id='medecin' required>
                             <option value=''>Choix</option>
-                            <option value='COVILLON'>Alexandrie COVILLON (Maxillo-facial)</option>
-                            <option value='MARQUIS'>Françoise MARQUIS (Radiologue)</option>
-                            <option value='FAURE'>Hugues FAURE (Neurologue)</option>
+                            <?php
+                            if ($select_res->rowCount() > 0) {
+                                while ($row = $select_res->fetch(PDO::FETCH_ASSOC)) {
+                                    echo '<option value="' . $row['nom_medecin'] . '">' . $row['prenom_medecin'] . ' ' . $row['nom_medecin'] . ' (' . $row['nom_service'] . ') ' . '</option>';
+                                }
+                            }
+                            ?>
                         </select><br><br>
                         <h1>Informations concernant le patient</h1>
                         <label for='civ'>Civ. </label>
@@ -161,30 +191,6 @@ session_start();
                     <p id="erreur"></p>
                 </div>
                 <?php
-                ini_set('display_errors', 1);
-                ini_set('display_startup_errors', 1);
-                error_reporting(E_ALL);
-                $serveur = "localhost";
-                $utilisateur = "root";
-                $motDePasse = "sio2024";
-                $nomBDD = "hopital";
-            
-                try {
-                    $connexion = new PDO("mysql:host=$serveur;dbname=$nomBDD", $utilisateur, $motDePasse);
-                    $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    $table = "Professionnel";
-                    $donnee1 = "id";
-                    $donnee2 = "identifiant";
-                    $donnee3 = "mdp";
-                    $donnee5 = "nom";
-                    $donnee6 = "id_role";
-        
-                    $requete = $connexion->prepare("SELECT $donnee1, $donnee2, $donnee3 FROM $table");
-                    $requete->execute();
-                    $resultats = $requete->fetchAll(PDO::FETCH_ASSOC);
-                }catch (PDOException $e) {
-                    echo "Echec de la connexion à la base de donnée : " . $e->getMessage();
-                }
                 if(isset($_POST['submit'])) {
                     try {
                         // Ne pas décommenter
