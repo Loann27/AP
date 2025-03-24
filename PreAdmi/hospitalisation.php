@@ -145,7 +145,17 @@ session_start();
                     </form>
                 </div>
                 <div class="centre">
-                    <a href="./accueil_secretaire.php"><input type='submit' value='RETOUR'></a>
+                    <?php
+                    if($_SESSION['role'] == "Secrétaire") {
+                        ?>
+                        <a href="./accueil_secretaire.php"><input type='submit' value='RETOUR'></a>
+                        <?php
+                    } else {
+                        ?>
+                        <a href="../accueil_admin.php"><input type='submit' value='RETOUR'></a>
+                        <?php
+                    }
+                    ?>
                 </div>
                 <div id="hide1">
                     <p id="erreur"></p>
