@@ -32,9 +32,14 @@ let doc_identite;
 let doc_vitale;
 let doc_mutuelle;
 let doc_livret;
-let erreur = false;
+let erreur_time = false;
+let erreur_patient = false;
+let erreur_prevenir = false;
+let erreur_confiance = false;
+let erreur_secu = false;
 show();
 document.getElementById('date_hospi').setAttribute('min',getISODate());
+document.getElementById('date_hospi').setAttribute('max',getNextISODate());
 document.getElementById('date_naissance').setAttribute('max',getISODate());
 
 function getISODate(){
@@ -44,8 +49,11 @@ function getISODate(){
             ('0' + d.getDate()).slice(-2);
 }
 
-function log(value) {
-    console.log(value);
+function getNextISODate(){
+    const d = new Date();
+    return (d.getFullYear()+1) + '-' +
+            ('0' + (d.getMonth()+1)).slice(-2) + '-' +
+            ('0' + d.getDate()).slice(-2);
 }
 
 function verif() {
@@ -71,55 +79,58 @@ function verif_time(time) {
         const minutes = d.getMinutes();
         const date = document.getElementById("date_hospi").value;
         if((heures > hours || (heures == hours && minutes > mins)) && (Today == date)) {
-            erreur = true;
+            erreur_time = true;
         } else {
-            erreur = false;
+            erreur_time = false;
         }
     }
 }
 
 function verif_patients() {
+    email = document.getElementById('email').value;
     if(email.includes("@") && (email.endsWith(".com") || email.endsWith(".fr") || email.endsWith(".en") || email.endsWith(".net") || email.endsWith(".co.uk"))) {
         if(email.endsWith("@.com") || email.endsWith("@.fr") || email.endsWith("@.en") || email.endsWith("@.net") || email.endsWith("@.co.uk")) {
-            message6();
-            erreur = true;
+            erreur_patient = true;
         } else {
             if(email.startsWith("@")) {
-                message6();
-                erreur = true;
+                erreur_patient = true;
             } else {
-                erreur = false;
+                erreur_patient = false;
             }
         }
     } else {
-        message6();
-        erreur = true;
+        erreur_patient = true;
     }
 }
 
 function verif_prevenir() {
+    tel = document.getElementById('telephone').value;
+    tel_prev = document.getElementById('tel_prev').value;
     if(tel_prev == tel) {
-        erreur = true;
+        erreur_prevenir = true;
     } else {
-        erreur = false;
+        erreur_prevenir = false;
     }
 }
 
 function verif_confiance() {
+    tel = document.getElementById('telephone').value;
+    tel_conf = document.getElementById('tel_conf').value;
     if(tel_conf == tel) {
-        erreur = true;
+        erreur_confiance = true;
     } else {
-        erreur = false;
+        erreur_confiance = false;
     }
 }
 
 function verif_num_secu() { // Vérification du numéro de sécurité sociale
+    num_secu = document.getElementById('num_secu').value;
+    date_nais = document.getElementById('date_naissance').value;
+    civ = document.getElementById('civ').value;
     const first = num_secu.slice(0,1);
     const first_year = num_secu.slice(1,3);
     const first_month = num_secu.slice(3,5);
-    const verif_cp = cp.slice(0,2);
     const data_birth = new Date(date_nais);
-    const first_cp  = num_secu.slice(5,7);
     const y = data_birth.getFullYear().toString().slice(2,4);
     const x = (data_birth.getMonth() + 1);
     let z = "";
@@ -129,60 +140,39 @@ function verif_num_secu() { // Vérification du numéro de sécurité sociale
         z = x.toString();
     }
     if((first == 1 && civ != "Homme") || (first == 2 && civ != "Femme") || ((first != 1) && (first != 2))) {
-        message();
-        erreur = true;
+        erreur_secu = true;
     } else if(y != first_year) {
-        message2();
-        erreur = true;
+        erreur_secu = true;
     } else if(z != first_month) {
-        message3();
-        erreur = true;
-    } else if(verif_cp != first_cp) {
-        message5();
-        erreur = true;
+        erreur_secu = true;
     } else {
-        erreur = false;
+        erreur_secu = false;
     }
 }
 
 function message() {
     show();
-    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Numéro de sécurité sociale incompatible avec la civilté!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
+    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "L'heure est incorrecte!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
 }
 
 function message2() {
     show();
-    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Numéro de sécurité sociale incompatible avec l'année de naissance!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
+    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "L'email du patient est incorrect!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
 }
 
 function message3() {
     show();
-    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Numéro de sécurité sociale incompatible avec le mois de naissance!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
+    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Le téléphone de la personne à prévenir ne peut pas être celui du patient!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
 }
 
 function message4() {
     show();
-    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Heure d'intervention incorrecte!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
+    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Le téléphone de la personne de confiance ne peut pas être celui du patient!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
 }
 
 function message5() {
     show();
-    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Numéro de sécurité sociale incompatible avec le code postal!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
-}
-
-function message6() {
-    show();
-    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Le mail est incorrect!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
-}
-
-function message7() {
-    show();
-    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Le numéro de téléphone ne peut pas être celui du patient!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
-}
-
-function message8() {
-    show();
-    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Les fichiers obligatoires sont manquants!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
+    document.getElementById("erreur").innerHTML = "<img src='../../images/erreur.jpg' style='height: 50%; width: 50%;'><br/>" + "Le numéro de sécurité sociale est incorrect!<br/>" + "<input type='submit' onclick='cache_erreur();return false' value='OK'>";
 }
 
 function cache_erreur() {
@@ -199,3 +189,27 @@ function show(){
         document.getElementById("hide1").style.display = "none";  
     }
 }
+
+document.getElementById("myForm").addEventListener("submit", function(event) {
+    if(erreur_time == true) {
+        message();
+        event.preventDefault();
+        return false;
+    } else if(erreur_patient == true) {
+        message2();
+        event.preventDefault();
+        return false;
+    } else if(erreur_prevenir == true) {
+        message3();
+        event.preventDefault();
+        return false;
+    } else if(erreur_confiance == true) {
+        message4();
+        event.preventDefault();
+        return false;
+    } else if(erreur_secu == true) {
+        message5();
+        event.preventDefault();
+        return false;
+    }
+});
