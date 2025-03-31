@@ -15,6 +15,10 @@ error_reporting(E_ALL);
         <link rel="icon" href="images/logo.png" type="image/png">
     </head>
     <body>
+        <!-- Ajout du logo -->
+        <div id="logo-container">
+            <img src="libs/images/LPFS_logo.png" alt="Logo LPFS" class="logo">
+        </div>
         <div id="bloc1">
             <h2>connexion</h2>
             <form id="form" method="POST" action="index.php">
