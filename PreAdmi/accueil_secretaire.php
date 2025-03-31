@@ -7,6 +7,17 @@ session_start();
         <title>Accueil Secrétaire</title>
         <meta charset="utf-8">
         <link href="../../css/index.css" rel="stylesheet">
+        <script>
+            function redirect() {
+                window.location.href = "hospitalisation.php";
+            }
+            function redirect2() {
+                window.location.href = "modif.php";
+            }
+            function redirect3() {
+                window.location.href = "suppr.php";
+            }
+        </script>
     </head>
     <body>
         <?php
@@ -15,8 +26,16 @@ session_start();
                 ?>
                 <div class="bloc">
                     <div class="item1">
-                        <img src="../../images/formulaire.png" height="50%" width="20%"><br>
-                        <a href="./hospitalisation.php"><input type="submit" value="Pré-Admission"></a>
+                        <h1>Pré-admission</h1>
+                        <input type="image" src="../../images/formulaire.png" onclick="redirect(); return false;" alt="pré-admission" height="70%" width="25%"><br>
+                    </div>
+                    <div class="item1">
+                        <h1>Modification</h1>
+                        <input type="image" src="../../images/formulaire.png" onclick="redirect2(); return false;" alt="Modif-pré-admi" height="70%" width="25%"><br>
+                    </div>
+                    <div class="item1">
+                        <h1>Suppresion</h1>
+                        <input type="image" src="../../images/formulaire.png" onclick="redirect3(); return false;" alt="Modif-pré-admi" height="70%" width="25%"><br>
                     </div>
                 </div>
                 <div class="deconnexion">
