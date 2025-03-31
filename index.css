@@ -7,6 +7,14 @@ body {
     color: #333;
 }
 
+/* Logo */
+.logo {
+    display: block;
+    margin: 20px auto;
+    max-width: 150px;
+    height: auto;
+}
+
 /* Titres */
 h1 {
     color: black;
@@ -133,6 +141,12 @@ img.center {
     height: auto;
 }
 
+/* Logo de la page */
+#logo-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
 /* Message d'erreur */
 #erreur {
     text-align: center;
@@ -147,4 +161,52 @@ img.center {
 /* Centrage */
 .centre {
     text-align: center;
+}
+
+/* Visuel tableau */
+
+table {
+    border: 1px black solid;
+    border-radius: 2px;
+    background-color: white;
+    margin: auto;
+}
+
+thead {
+    background-color: yellow;
+}
+
+th {
+    border: 1px solid black;
+}
+
+tbody {
+    background-color: greenyellow;
+}
+
+td {
+    border: 1px solid black;
+}
+
+#recherche_mois {
+    background-color: white;
+    margin: 0 auto;
+    width: 50%;
+    text-align: center;
+}
+
+#recherche_mois select {
+    background-color: blue;
+    border-radius: 5px;
+    border: 1px solid black;
+    color: white;
+    padding: 5px;
+}
+
+#recherche_mois input[type="submit"] {
+    background-color: blue;
+    color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
 }
