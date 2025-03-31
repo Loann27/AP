@@ -58,7 +58,7 @@ error_reporting(E_ALL);
                 if ($responseKeys["success"]) {
             $serveur = "localhost";
             $utilisateur = "root";
-            $motDePasse = "sio2024";
+            $motDePasse = "sio2024%";
             $nomBDD = "hopital";
 
             try {
