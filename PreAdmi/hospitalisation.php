@@ -204,6 +204,9 @@ session_start();
                         $civ = $_POST['civ'];
                         $nom_nais = $_POST['nom_naissance'];
                         $nom_ep = isset($_POST['nom_epouse']) ? $_POST["nom_epouse"] : null;
+                        if(empty($nom_ep)) {
+                            $nom_ep = null;
+                        }
                         $pren = $_POST["prenom"];
                         $date_nais = $_POST['date_naissance'];
                         $adr = $_POST['adresse'];
@@ -290,7 +293,7 @@ session_start();
                         $id_med_res = $id_med->fetchAll(PDO::FETCH_ASSOC);
                         $id_med1 = $id_med_res[0]['id'];
                         $sql1 = "INSERT INTO Hospitalisation (id_hospitalisation, date_hospi, nom_medecin, chambre) VALUES (:id1, :date_hospi, :medecin, :chambre_part);";
-                        $verif = $connexion->prepare("SELECT count(*) FROM Patient WHERE nom_naissance = :nom_nais, nom_epouse = :nom_ep, prenom = :pren, date_naissance, :date_nais, adresse = :adr, CP = :cp, ville = :ville, email = :email, telephone = :tel, genre = :civ;");
+                        $verif = $connexion->prepare("SELECT count(*) FROM Patient WHERE nom_naissance = :nom_nais AND nom_epouse = :nom_ep AND prenom = :pren AND date_naissance = :date_nais AND adresse = :adr AND CP = :cp AND ville = :ville AND email = :email AND telephone = :tel AND genre = :civ;");
                         $verif->bindParam(':nom_nais', $nom_nais);
                         $verif->bindParam(':nom_ep', $nom_ep);
                         $verif->bindParam(':pren', $pren);
@@ -303,7 +306,7 @@ session_start();
                         $verif->bindParam(':civ', $civ);
                         $verif->execute();
                         if($verif->fetchColumn() == 0) {
-                            if($nom_ep) {
+                            if(isset($_POST['nom_epouse']) && $nom_ep !== NULL) {
                                 $sql2 = "INSERT INTO Patient (id_patient, nom_naissance, nom_epouse, prenom, date_naissance, adresse, CP, ville, email, telephone, genre) VALUES (:id_patient1, :nom_nais, :nom_ep, :pren, :date_nais, :adr, :cp, :ville, :email, :tel, :civ);";
                                 $conn2 = $connexion->prepare($sql2);
                                 $conn2->bindParam(':nom_ep', $nom_ep);
@@ -311,19 +314,97 @@ session_start();
                                 $sql2 = "INSERT INTO Patient (id_patient, nom_naissance, prenom, date_naissance, adresse, CP, ville, email, telephone, genre) VALUES (:id_patient1, :nom_nais, :pren, :date_nais, :adr, :cp, :ville, :email, :tel, :civ);";
                                 $conn2 = $connexion->prepare($sql2);
                             }
+                            $conn2->bindParam(':id_patient1', $id_patient1);
+                            $conn2->bindParam(':nom_nais', $nom_nais);
+                            $conn2->bindParam(':pren', $pren);
+                            $conn2->bindParam(':date_nais', $date_nais);
+                            $conn2->bindParam(':adr', $adr);
+                            $conn2->bindParam(':cp', $cp);
+                            $conn2->bindParam(':ville', $ville);
+                            $conn2->bindParam(':email', $email);
+                            $conn2->bindParam(':tel', $tel);
+                            $conn2->bindParam(':civ', $civ);
+                            try {
+                                $conn2->execute();
+                            } catch (PDOException $e) {
+                                echo "Erreur Patient: " . $e->getMessage() . "<br>";
+                            }
                         } else {
-                            
+                            $count2 = "SELECT id_patient FROM Patient WHERE nom_naissance = :nom_nais AND prenom = :pren AND date_naissance = :date_nais AND adresse = :adr AND CP = :cp AND ville = :ville AND email = :email AND telephone = :tel AND genre = :civ;";
+                            $conn2 = $connexion->prepare($count2);
+                            $conn2->bindParam(':nom_nais', $nom_nais);
+                            $conn2->bindParam(':pren', $pren);
+                            $conn2->bindParam(':date_nais', $date_nais);
+                            $conn2->bindParam(':adr', $adr);
+                            $conn2->bindParam(':cp', $cp);
+                            $conn2->bindParam(':ville', $ville);
+                            $conn2->bindParam(':email', $email);
+                            $conn2->bindParam(':tel', $tel);
+                            $conn2->bindParam(':civ', $civ);
+                            $conn2->execute();
+                            $id_patient_res = $conn2->fetchAll(PDO::FETCH_ASSOC);
+                            $id_patient1 = $id_patient_res[0]['id_patient'];
                         }
-                        $verif2 = $connexion->prepare("SELECT count(*) FROM Personnepre WHERE nom = :nom_pre, prenom = :pren_pre, tel = :tel_pre, adresse = :adr_pre;");
+                        $verif2 = $connexion->prepare("SELECT count(*) FROM Personnepre WHERE nom = :nom_pre AND prenom = :pren_pre AND tel = :tel_pre AND adresse = :adr_pre;");
                         $verif2->bindParam(':nom_pre', $nom_prev);
                         $verif2->bindParam(':pren_pre', $pren_prev);
                         $verif2->bindParam(':tel_pre', $tel_prev);
-                        $verif2->bindParam('adr_pre', $adr_prev);
+                        $verif2->bindParam(':adr_pre', $adr_prev);
                         $verif2->execute();
                         if($verif2->fetchColumn() == 0) {
                             $sql3 = "INSERT INTO Personnepre VALUES (:id_prev1, :nom_prev, :pren_prev, :tel_prev, :adr_prev);";
+                            $conn3 = $connexion->prepare($sql3);
+                            $conn3->bindParam(':id_prev1', $id_prev1);
+                            $conn3->bindParam(':nom_prev', $nom_prev);
+                            $conn3->bindParam(':pren_prev', $pren_prev);
+                            $conn3->bindParam(':tel_prev', $tel_prev);
+                            $conn3->bindParam(':adr_prev', $adr_prev);
+                            try {
+                                $conn3->execute();
+                            } catch (PDOException $e) {
+                                echo "Erreur Personnepre: " . $e->getMessage() . "<br>";
+                            }
+                        } else {
+                            $count4 = "SELECT id FROM Personnepre WHERE nom = :nom_prev AND prenom = :pren_prev AND tel = :tel_prev AND adresse = :adr_prev";
+                            $conn3 = $connexion->prepare($count4);
+                            $conn3->bindParam(':nom_prev', $nom_prev);
+                            $conn3->bindParam(':pren_prev', $pren_prev);
+                            $conn3->bindParam(':tel_prev', $tel_prev);
+                            $conn3->bindParam(':adr_prev', $adr_prev);
+                            $conn3->execute();
+                            $id_prev_res = $conn3->fetchAll(PDO::FETCH_ASSOC);
+                            $id_prev1 = $id_prev_res[0]['id'];
                         }
-                        $sql4 = "INSERT INTO Personneconf VALUES (:id_conf1, :nom_conf, :pren_conf, :tel_conf, :adr_conf);";
+                        $verif3 = $connexion->prepare("SELECT count(*) FROM Personneconf WHERE nom = :nom_conf AND prenom = :pren_conf AND tel = :tel_conf AND adresse = :adr_conf");
+                        $verif3->bindParam(':nom_conf', $nom_conf);
+                        $verif3->bindParam(':pren_conf', $pren_conf);
+                        $verif3->bindParam(':tel_conf', $tel_conf);
+                        $verif3->bindParam(':adr_conf', $adr_conf);
+                        $verif3->execute();
+                        if($verif3->fetchColumn() == 0) {
+                            $sql4 = "INSERT INTO Personneconf VALUES (:id_conf1, :nom_conf, :pren_conf, :tel_conf, :adr_conf);";
+                            $conn4 = $connexion->prepare($sql4);
+                            $conn4->bindParam(':id_conf1', $id_conf1);
+                            $conn4->bindParam(':nom_conf', $nom_conf);
+                            $conn4->bindParam(':pren_conf', $pren_conf);
+                            $conn4->bindParam(':tel_conf', $tel_conf);
+                            $conn4->bindParam(':adr_conf', $adr_conf);
+                            try {
+                                $conn4->execute();
+                            } catch (PDOException $e) {
+                                echo "Erreur Personneconf: " . $e->getMessage() . "<br>";
+                            }
+                        } else {
+                            $count5 = "SELECT id FROM Personneconf WHERE nom = :nom_conf AND prenom = :pren_conf AND tel = :tel_conf AND adresse = :adr_conf";
+                            $conn4 = $connexion->prepare($count5);
+                            $conn4->bindParam(':nom_conf', $nom_conf);
+                            $conn4->bindParam(':pren_conf', $pren_conf);
+                            $conn4->bindParam(':tel_conf', $tel_conf);
+                            $conn4->bindParam(':adr_conf', $adr_conf);
+                            $conn4->execute();
+                            $id_conf_res = $conn4->fetchAll(PDO::FETCH_ASSOC);
+                            $id_conf1 = $id_conf_res[0]['id'];
+                        }
                         if(isset($_POST['livretFamille'])) {
                             $sql5 = "INSERT INTO PieceJointe (id, recto_verso_identite, carte_vitale, carte_mutuelle, livret_famille) VALUES (:id_piece1, :doc_identite, :doc_vitale, :doc_mutuelle, :doc_livret);";
                             $conn5 = $connexion->prepare($sql5);
@@ -332,7 +413,7 @@ session_start();
                             $sql5 = "INSERT INTO PieceJointe (id, recto_verso_identite, carte_vitale, carte_mutuelle) VALUES (:id_piece1, :doc_identite, :doc_vitale, :doc_mutuelle);";
                             $conn5 = $connexion->prepare($sql5);
                         }
-                        $sql6 = "INSERT INTO Preadmi (id, date_preadmi, heure) VALUES (:id_preadmi1, :date_hospi, :heure);";
+                        $sql6 = "INSERT INTO Preadmi (id, date_preadmi, heure, type_preadmi) VALUES (:id_preadmi1, :date_hospi, :heure, :type_preadmi);";
                         $sql7 = "INSERT INTO Sociale (id, organisme_secu_sociale, num_secu, assure, ALD, nom_mutuelle, num_adherent, chambre_particuliere) VALUES (:id_sociale1, :orga, :num_secu, :assure, :ald, :nom_mutu, :num_adherent, :chambre_part);";
                         $conn1 = $connexion->prepare($sql1);
                         $conn1->bindParam(':id1', $id1);
@@ -343,43 +424,6 @@ session_start();
                             $conn1->execute();
                         } catch (PDOException $e) {
                             echo "Erreur Hospitalisation: " . $e->getMessage() . "<br>";
-                        }
-                        $conn2->bindParam(':id_patient1', $id_patient1);
-                        $conn2->bindParam(':nom_nais', $nom_nais);
-                        $conn2->bindParam(':pren', $pren);
-                        $conn2->bindParam(':date_nais', $date_nais);
-                        $conn2->bindParam(':adr', $adr);
-                        $conn2->bindParam(':cp', $cp);
-                        $conn2->bindParam(':ville', $ville);
-                        $conn2->bindParam(':email', $email);
-                        $conn2->bindParam(':tel', $tel);
-                        $conn2->bindParam(':civ', $civ);
-                        try {
-                            $conn2->execute();
-                        } catch (PDOException $e) {
-                            echo "Erreur Patient: " . $e->getMessage() . "<br>";
-                        }
-                        $conn3 = $connexion->prepare($sql3);
-                        $conn3->bindParam(':id_prev1', $id_prev1);
-                        $conn3->bindParam(':nom_prev', $nom_prev);
-                        $conn3->bindParam(':pren_prev', $pren_prev);
-                        $conn3->bindParam(':tel_prev', $tel_prev);
-                        $conn3->bindParam(':adr_prev', $adr_prev);
-                        try {
-                            $conn3->execute();
-                        } catch (PDOException $e) {
-                            echo "Erreur Personnepre: " . $e->getMessage() . "<br>";
-                        }
-                        $conn4 = $connexion->prepare($sql4);
-                        $conn4->bindParam(':id_conf1', $id_conf1);
-                        $conn4->bindParam(':nom_conf', $nom_conf);
-                        $conn4->bindParam(':pren_conf', $pren_conf);
-                        $conn4->bindParam(':tel_conf', $tel_conf);
-                        $conn4->bindParam(':adr_conf', $adr_conf);
-                        try {
-                            $conn4->execute();
-                        } catch (PDOException $e) {
-                            echo "Erreur Personneconf: " . $e->getMessage() . "<br>";
                         }
                         $conn5->bindParam(':id_piece1', $id_piece1);
                         $conn5->bindParam(':doc_identite', $doc_identite);
@@ -394,6 +438,7 @@ session_start();
                         $conn6->bindParam(':id_preadmi1', $id_preadmi1);
                         $conn6->bindParam(':date_hospi', $date_hospi);
                         $conn6->bindParam(':heure', $heure);
+                        $conn6->bindParam(':type_preadmi', $preadmi);
                         try {
                             $conn6->execute();
                         } catch (PDOException $e) {
