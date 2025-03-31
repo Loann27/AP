@@ -33,7 +33,7 @@ session_start();
                         try {
                             $serveur = "localhost";
                             $utilisateur = "root";
-                            $motDePasse = "sio2024";
+                            $motDePasse = "sio2024%";
                             $nomBDD = "hopital";
                             $connexion = new PDO("mysql:host=$serveur;dbname=$nomBDD", $utilisateur, $motDePasse);
                             $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
