@@ -12,13 +12,14 @@ error_reporting(E_ALL);
         <link href="css/index.css" rel="stylesheet">
         <script src="js/animation.js"></script>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-        <link rel="icon" href="images/logo.png" type="image/png">
     </head>
     <body>
+
         <!-- Ajout du logo -->
         <div id="logo-container">
             <img src="libs/images/LPFS_logo.png" alt="Logo LPFS" class="logo">
         </div>
+
         <div id="bloc1">
             <h2>connexion</h2>
             <form id="form" method="POST" action="index.php">
@@ -58,7 +59,7 @@ error_reporting(E_ALL);
                 if ($responseKeys["success"]) {
             $serveur = "localhost";
             $utilisateur = "root";
-            $motDePasse = "sio2024%";
+            $motDePasse = "sio2024";
             $nomBDD = "hopital";
 
             try {
@@ -91,10 +92,10 @@ error_reporting(E_ALL);
                 echo "<h1>L'identifiant n'existe pas!</h1>";
             } else {
                 $sql = "SELECT * FROM $table WHERE $donnee2 = :identifiant AND $donnee3 = :mdp";
-                $stmt = $connexion->prepare($sql);
-                $stmt->bindParam(':identifiant', $identifiant);
-                $stmt->bindParam(':mdp', $mdp_chiff);
-                $stmt->execute();
+            $stmt = $connexion->prepare($sql);
+            $stmt->bindParam(':identifiant', $identifiant);
+            $stmt->bindParam(':mdp', $mdp_chiff);
+            $stmt->execute();
 
             if($stmt->rowCount() == 0) {
                 echo "<h1>Le mot de passe est incorrect!</h1>";
@@ -109,23 +110,16 @@ error_reporting(E_ALL);
                 if($_SESSION['test'] == 1) {
                     $_SESSION['compte'] = $identifiant;
                     $_SESSION['role'] = 'Admin';
-                    header('Location: ./pages/reussi.php');
+                    
+                    header('Location: pages/reussi.php');
                 } else if($_SESSION['test'] == 4) {
                     $_SESSION['compte'] = $identifiant;
                     $_SESSION['role'] = 'Secrétaire';
                     header('Location: ./pages/PreAdmi/accueil_secretaire.php');
-                } else if($_SESSION['test'] == 3) {
-                    $_SESSION['compte'] = $identifiant;
-                    $_SESSION['role'] = 'Médecin';
-                    header('Location: ./pages/medecin/accueil.php');
-                } else if($_SESSION['test'] == 2) {
-                    $_SESSION['compte'] = $identifiant;
-                    $_SESSION['role'] = 'Chirurgien';
-                    header('Location: ./pages/medecin/accueil.php');
                 } else {
                     $_SESSION['compte'] = $identifiant;
                     $_SESSION['role'] = 'Pas admin';
-                    header('Location: ./pages/reussi.php');
+                    header('Location: pages/reussi.php');
                 }
                 
             }
