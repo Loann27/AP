@@ -31,7 +31,7 @@ session_start();
             echo "<div class ='deconnexion'>$role</div>";
             ?>
             <div class="deconnexion">
-                <a href="./accueil_admin.php">Accueil de l'administrateur</a>
+                <a href="./admin_accueil.php">Accueil de l'administrateur</a>
             </div>
             <div class="deconnexion">
                 <a href="./deconnexion.php">Déconnexion</a>
