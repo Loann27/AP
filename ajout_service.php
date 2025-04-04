@@ -1,6 +1,6 @@
 <?php
 session_start();
-if ($_SESSION['role'] !== 'admin') {
+if ($_SESSION['role'] !== 'Admin') {
     header('Location: ../../');
     exit();
 }
@@ -25,12 +25,12 @@ if ($_SESSION['role'] !== 'admin') {
         <a href="admin_accueil.php"><button>Accueil</button></a>
     </section>
 </body>
-</html>
 
     <!-- Services -->
     <section>
         <h2>Ajouter un Service</h2>
         <form id="form-ajout-service">
+            Id services: <input type="number" name="id_service" required><br>
             Nom du service: <input type="text" name="nom" required><br>
             <button type="submit">Ajouter</button>
         </form>
@@ -48,3 +48,32 @@ if ($_SESSION['role'] !== 'admin') {
             <button type="submit">Supprimer</button>
         </form>
     </section>
+
+    <script>
+        async function envoyerFormulaire(formId, action) {
+            const form = document.getElementById(formId);
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                formData.append('action', action);
+
+                try {
+                    const response = await fetch('admin_api.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    alert(result.message);
+                } catch (error) {
+                    alert('Erreur lors de la requête.');
+                }
+            });
+        }
+
+        // Initialisation des formulaires
+        envoyerFormulaire('form-ajout-service', 'ajouter_service');
+        envoyerFormulaire('form-modif-service', 'modifier_service');
+        envoyerFormulaire('form-suppr-service', 'supprimer_service');
+    </script>
+</html>
