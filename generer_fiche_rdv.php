@@ -6,7 +6,7 @@ require_once('../libs/fpdf.php');
 //Connexion a la base de données
 $host = "localhost";
 $user = "root";
-$pass = "sio2024";
+$pass = "sio2024%";
 $dbname = "hopital";
 
 $conn = new mysqli($host, $user, $pass, $dbname);
