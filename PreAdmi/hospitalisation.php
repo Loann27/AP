@@ -45,7 +45,7 @@ session_start();
             error_reporting(E_ALL);
             $serveur = "localhost";
             $utilisateur = "root";
-            $motDePasse = "sio2024";
+            $motDePasse = "sio2024%";
             $nomBDD = "hopital";
             try {
                 $connexion = new PDO("mysql:host=$serveur;dbname=$nomBDD", $utilisateur, $motDePasse);
@@ -182,7 +182,7 @@ session_start();
                         <?php
                     } else {
                         ?>
-                        <a href="../../pages_admin/admin_accueil.php"><input type='submit' value='RETOUR'></a>
+                        <a href="../accueil_admin.php"><input type='submit' value='RETOUR'></a>
                         <?php
                     }
                     ?>
@@ -409,12 +409,81 @@ session_start();
                             $sql5 = "INSERT INTO PieceJointe (id, recto_verso_identite, carte_vitale, carte_mutuelle, livret_famille) VALUES (:id_piece1, :doc_identite, :doc_vitale, :doc_mutuelle, :doc_livret);";
                             $conn5 = $connexion->prepare($sql5);
                             $conn5->bindParam(':doc_livret', $doc_livret);
+                            $verif5 = $connexion->prepare("SELECT count(*) FROM PieceJointe WHERE recto_verso_identite = :identite AND carte_vitale = :carteVitale AND carte_mutuelle = :mutuelle AND livret_famille = :livretFamille");
+                            $verif5->bindParam(':livretFamille', $doc_livret);
                         } else {
                             $sql5 = "INSERT INTO PieceJointe (id, recto_verso_identite, carte_vitale, carte_mutuelle) VALUES (:id_piece1, :doc_identite, :doc_vitale, :doc_mutuelle);";
                             $conn5 = $connexion->prepare($sql5);
+                            $verif5 = $connexion->prepare("SELECT count(*) FROM PieceJointe WHERE recto_verso_identite = :identite AND carte_vitale = :carteVitale AND carte_mutuelle = :mutuelle");
                         }
                         $sql6 = "INSERT INTO Preadmi (id, date_preadmi, heure, type_preadmi) VALUES (:id_preadmi1, :date_hospi, :heure, :type_preadmi);";
-                        $sql7 = "INSERT INTO Sociale (id, organisme_secu_sociale, num_secu, assure, ALD, nom_mutuelle, num_adherent, chambre_particuliere) VALUES (:id_sociale1, :orga, :num_secu, :assure, :ald, :nom_mutu, :num_adherent, :chambre_part);";
+                        $verif4 = $connexion->prepare("SELECT count(*) FROM Sociale WHERE organisme_secu_sociale = :orga AND num_secu = :num_secu AND assure = :assure AND ALD = :ald AND nom_mutuelle = :mutuelle AND num_adherent = :num_adherent AND chambre_particuliere = :chambre_part");
+                        $verif4->bindParam(':orga', $orga);
+                        $verif4->bindParam(':num_secu', $num_secu);
+                        $verif4->bindParam(':num_adherent', $num_adherent);
+                        $verif4->bindParam(':assure', $assure);
+                        $verif4->bindParam(':ald', $ald);
+                        $verif4->bindParam(':mutuelle', $nom_mutu);
+                        $verif4->bindParam(':chambre_part', $chambre_part);
+                        $verif4->execute();
+                        if($verif4->fetchColumn() == 0) {
+                            $sql7 = "INSERT INTO Sociale (id, organisme_secu_sociale, num_secu, assure, ALD, nom_mutuelle, num_adherent, chambre_particuliere) VALUES (:id_sociale1, :orga, :num_secu, :assure, :ald, :nom_mutu, :num_adherent, :chambre_part);";
+                            $conn7 = $connexion->prepare($sql7);
+                            $conn7->bindParam(':id_sociale1', $id_sociale1);
+                            $conn7->bindParam(':orga', $orga);
+                            $conn7->bindParam(':num_secu', $num_secu);
+                            $conn7->bindParam(':assure', $assure);
+                            $conn7->bindParam(':ald', $ald);
+                            $conn7->bindParam(':nom_mutu', $nom_mutu);
+                            $conn7->bindParam(':num_adherent', $num_adherent);
+                            $conn7->bindParam(':chambre_part', $chambre_part);
+                            try {
+                                $conn7->execute();
+                            } catch (PDOException $e) {
+                                echo "Erreur Sociale: " . $e->getMessage() . "<br>";
+                            }
+                        } else {
+                            $count7 = "SELECT id FROM Sociale WHERE organisme_secu_sociale = :orga AND num_secu = :num_secu AND assure = :assure AND ALD = :ald AND nom_mutuelle = :nom_mutu AND num_adherent = :num_adherent AND chambre_particuliere = :chambre_part";
+                            $conn1 = $connexion->prepare($count7);
+                            $conn1->bindParam(':orga', $orga);
+                            $conn1->bindParam(':num_secu', $num_secu);
+                            $conn1->bindParam(':assure', $assure);
+                            $conn1->bindParam(':ald', $ald);
+                            $conn1->bindParam(':nom_mutu', $nom_mutu);
+                            $conn1->bindParam(':num_adherent', $num_adherent);
+                            $conn1->bindParam(':chambre_part', $chambre_part);
+                            $conn1->execute();
+                            $id_sociale_res = $conn1->fetchAll(PDO::FETCH_ASSOC);
+                            $id_sociale1 = $id_sociale_res[0]['id'];
+                        }
+                        $verif5->bindParam(':identite', $doc_identite);
+                        $verif5->bindParam(':carteVitale', $doc_vitale);
+                        $verif5->bindParam(':mutuelle', $doc_mutuelle);
+                        $verif5->execute();
+                        if($verif5->fetchColumn() == 0) {
+                            $conn5->bindParam(':id_piece1', $id_piece1);
+                            $conn5->bindParam(':doc_identite', $doc_identite);
+                            $conn5->bindParam(':doc_vitale', $doc_vitale);
+                            $conn5->bindParam(':doc_mutuelle', $doc_mutuelle);
+                            try {
+                                $conn5->execute();
+                            } catch (PDOException $e) {
+                                echo "Erreur PieceJointe: " . $e->getMessage() . "<br>";
+                            }
+                        } else {
+                            if(isset($_POST['livretFamille'])) {
+                                $count8 = $connexion->prepare("SELECT id FROM PieceJointe WHERE recto_verso_identite = :identite AND carte_vitale = :carteVitale AND carte_mutuelle = :mutuelle AND livret_famille = :livretFamille");
+                                $count8->bindParam(':livretFamille', $doc_livret);
+                            } else {
+                                $count8 = $connexion->prepare("SELECT id FROM PieceJointe WHERE recto_verso_identite = :identite AND carte_vitale = :carteVitale AND carte_mutuelle = :mutuelle");
+                            }
+                            $count8->bindParam(':identite', $doc_identite);
+                            $count8->bindParam(':carteVitale', $doc_vitale);
+                            $count8->bindParam(':mutuelle', $doc_mutuelle);
+                            $count8->execute();
+                            $id_piece_res = $count8->fetchAll(PDO::FETCH_ASSOC);
+                            $id_piece1 = $id_piece_res[0]['id'];
+                        }
                         $conn1 = $connexion->prepare($sql1);
                         $conn1->bindParam(':id1', $id1);
                         $conn1->bindParam(':date_hospi', $date_hospi);
@@ -425,15 +494,6 @@ session_start();
                         } catch (PDOException $e) {
                             echo "Erreur Hospitalisation: " . $e->getMessage() . "<br>";
                         }
-                        $conn5->bindParam(':id_piece1', $id_piece1);
-                        $conn5->bindParam(':doc_identite', $doc_identite);
-                        $conn5->bindParam(':doc_vitale', $doc_vitale);
-                        $conn5->bindParam(':doc_mutuelle', $doc_mutuelle);
-                        try {
-                            $conn5->execute();
-                        } catch (PDOException $e) {
-                            echo "Erreur PieceJointe: " . $e->getMessage() . "<br>";
-                        }
                         $conn6 = $connexion->prepare($sql6);
                         $conn6->bindParam(':id_preadmi1', $id_preadmi1);
                         $conn6->bindParam(':date_hospi', $date_hospi);
@@ -443,20 +503,6 @@ session_start();
                             $conn6->execute();
                         } catch (PDOException $e) {
                             echo "Erreur Preadmi: " . $e->getMessage() . "<br>";
-                        }
-                        $conn7 = $connexion->prepare($sql7);
-                        $conn7->bindParam(':id_sociale1', $id_sociale1);
-                        $conn7->bindParam(':orga', $orga);
-                        $conn7->bindParam(':num_secu', $num_secu);
-                        $conn7->bindParam(':assure', $assure);
-                        $conn7->bindParam(':ald', $ald);
-                        $conn7->bindParam(':nom_mutu', $nom_mutu);
-                        $conn7->bindParam(':num_adherent', $num_adherent);
-                        $conn7->bindParam(':chambre_part', $chambre_part);
-                        try {
-                            $conn7->execute();
-                        } catch (PDOException $e) {
-                            echo "Erreur Sociale: " . $e->getMessage() . "<br>";
                         }
                         $up_sql1 = "UPDATE Hospitalisation SET id_patient = :id_patient1 WHERE id_hospitalisation = :id1;";
                         $up_conn1 = $connexion->prepare($up_sql1);
