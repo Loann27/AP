@@ -1,6 +1,6 @@
 <?php
 session_start();
-if ($_SESSION['role'] !== 'admin') {
+if ($_SESSION['role'] !== 'Admin') {
     header('Location: ../../');
     exit();
 }
@@ -25,15 +25,16 @@ if ($_SESSION['role'] !== 'admin') {
         <a href="admin_accueil.php"><button>Accueil</button></a>
     </section>
 </body>
-</html>    
+ 
     <!-- Médecins -->
     <section>
         <h2>Ajouter un Médecin</h2>
         <form id="form-ajout-medecin">
+            Id Médecin: <input type=number name="id" required><br>
             Nom: <input type="text" name="nom" required><br>
             Prénom: <input type="text" name="prenom" required><br>
-            Identifiant: <input type="text" name="identifiant" required><br>
-            Mot de passe (hashé): <input type="text" name="mdp" required><br>
+            Identifiant : <input type="text" name="identifiant" required><br>
+            Mot de passe : <input type="text" name="mdp" required><br>
             ID Service: <input type="number" name="id_service" required><br>
             ID Rôle: <input type="number" name="id_role" required><br>
             <button type="submit">Ajouter</button>
@@ -53,3 +54,33 @@ if ($_SESSION['role'] !== 'admin') {
 
         
     </section>
+
+    <script>
+        // Fonction pour envoyer les formulaires
+        async function envoyerFormulaire(formId, action) {
+            const form = document.getElementById(formId);
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                formData.append('action', action);
+
+        try {
+            const response = await fetch('admin_api.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        } catch (error) {
+            alert('Erreur lors de la requête.');
+        }
+    });
+}
+
+// Médecins
+envoyerFormulaire('form-ajout-medecin', 'ajouter_medecin');
+envoyerFormulaire('form-modif-medecin', 'modifier_medecin');
+envoyerFormulaire('form-suppr-medecin', 'supprimer_medecin');
+</script>
+</html>   
