@@ -95,7 +95,7 @@ session_start();
                         <?php
                     } else {
                         ?>
-                        <a href="../../pages_admin/admin_accueil.php"><input type='submit' value='RETOUR'></a>
+                        <a href="../accueil_admin.php"><input type='submit' value='RETOUR'></a>
                         <?php
                     }
                     ?>
@@ -111,12 +111,15 @@ session_start();
                         //$cipher = "aes-256-cbc";
                         //$iv = file_get_contents('/var/www/secrets/iv.iv');
                         $preadmi = $_POST['preadmi'];
+                        $count = $connexion->prepare("SELECT count(*) FROM Preadmi INNER JOIN Patient ON Patient.id_patient = Preadmi.id_patient WHERE patient.id_patient = :id_patient");
                         $id_patient_sql = "SELECT Patient.id_patient FROM Patient INNER JOIN Preadmi ON Patient.id_patient = Preadmi.id_patient WHERE Preadmi.id = :id";
                         $conn1 = $connexion->prepare($id_patient_sql);
                         $conn1->bindParam(':id', $preadmi);
                         $conn1->execute();
                         $id_patient = $conn1->fetchAll();
                         $id_patient_res = $id_patient[0]['id_patient'];
+                        $count->bindParam(':id_patient', $id_patient_res);
+                        $count->execute();
                         $id_perspre_sql = "SELECT Personnepre.id FROM Personnepre INNER JOIN Patient ON Patient.id_perspre = Personnepre.id WHERE Patient.id_patient = :id";
                         $conn2 = $connexion->prepare($id_perspre_sql);
                         $conn2->bindParam(':id', $id_patient_res);
@@ -133,18 +136,22 @@ session_start();
                         $conn = $connexion->prepare($sup_sql);
                         $conn->bindParam(':id', $preadmi);
                         $conn->execute();
-                        $sup_sql2 = "DELETE FROM Sociale WHERE id_patient = :id_patient";
-                        $conn3 = $connexion->prepare($sup_sql2);
-                        $conn3->bindParam(':id_patient', $id_patient_res);
-                        $conn3->execute();
-                        $sup_sql3 = "DELETE FROM Personnepre WHERE id = :id";
-                        $conn5 = $connexion->prepare($sup_sql3);
-                        $conn5->bindParam(':id', $id_perspre_res);
-                        $conn5->execute();
-                        $sup_sql4 = "DELETE FROM Personneconf WHERE id = :id";
-                        $conn6 = $connexion->prepare($sup_sql4);
-                        $conn6->bindParam(':id', $id_persconf_res);
-                        $conn6->execute();
+                        $count_res = $count->fetchAll(PDO::FETCH_ASSOC);
+                        $count1 = $count_res[0]['count(*)'];
+                        if($count1 == 1) {
+                            $sup_sql2 = "DELETE FROM Sociale WHERE id_patient = :id_patient";
+                            $conn3 = $connexion->prepare($sup_sql2);
+                            $conn3->bindParam(':id_patient', $id_patient_res);
+                            $conn3->execute();
+                            $sup_sql3 = "DELETE FROM Personnepre WHERE id = :id";
+                            $conn5 = $connexion->prepare($sup_sql3);
+                            $conn5->bindParam(':id', $id_perspre_res);
+                            $conn5->execute();
+                            $sup_sql4 = "DELETE FROM Personneconf WHERE id = :id";
+                            $conn6 = $connexion->prepare($sup_sql4);
+                            $conn6->bindParam(':id', $id_persconf_res);
+                            $conn6->execute();
+                        }
                         echo "<h1>Suppression réussie!</h1>";
                     } catch (PDOException $e) {
                         echo("erreur lors de la suppression!" . $e->getMessage() . "<br>");
