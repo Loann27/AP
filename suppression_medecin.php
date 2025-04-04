@@ -1,6 +1,6 @@
 <?php
 session_start();
-if ($_SESSION['role'] !== 'admin') {
+if ($_SESSION['role'] !== 'Admin') {
     header('Location: ../../');
     exit();
 }
