@@ -110,16 +110,23 @@ error_reporting(E_ALL);
                 if($_SESSION['test'] == 1) {
                     $_SESSION['compte'] = $identifiant;
                     $_SESSION['role'] = 'Admin';
-                    
-                    header('Location: pages/reussi.php');
+                    header('Location: ./pages/reussi.php');
                 } else if($_SESSION['test'] == 4) {
                     $_SESSION['compte'] = $identifiant;
                     $_SESSION['role'] = 'Secrétaire';
                     header('Location: ./pages/PreAdmi/accueil_secretaire.php');
+                } else if($_SESSION['test'] == 3) {
+                    $_SESSION['compte'] = $identifiant;
+                    $_SESSION['role'] = 'Médecin';
+                    header('Location: ./pages/medecin/accueil.php');
+                } else if($_SESSION['test'] == 2) {
+                    $_SESSION['compte'] = $identifiant;
+                    $_SESSION['role'] = 'Chirurgien';
+                    header('Location: ./pages/medecin/accueil.php');
                 } else {
                     $_SESSION['compte'] = $identifiant;
                     $_SESSION['role'] = 'Pas admin';
-                    header('Location: pages/reussi.php');
+                    header('Location: ./pages/reussi.php');
                 }
                 
             }
