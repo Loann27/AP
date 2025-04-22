@@ -1,7 +1,8 @@
 <?php
-// Vérification de la session admin (à adapter selon votre système d'authentification)
 session_start();
-if (!isset($_SESSION['role']) || $_SESSION['role'] != 'Admin') {
+
+// Vérification de la session admin
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Admin') {
     echo json_encode(["status" => "error", "message" => "Accès refusé."]);
     exit();
 }
