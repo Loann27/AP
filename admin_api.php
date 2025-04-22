@@ -135,11 +135,13 @@ function ajouterService($pdo) {
         return;
     }
 
+    $id_service = $_POST['id_service'];
     $nom = $_POST['nom'];
     
     try {
-        $sql = "INSERT INTO Services (nom) VALUES (?)";
+        $sql = "INSERT INTO Services (id_service, nom) VALUES (:id, ?)";
         $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':id', $id_service);
         $stmt->execute([$nom]);
         
         echo json_encode(["status" => "success", "message" => "Service ajouté avec succès."]);
