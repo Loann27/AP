@@ -6,11 +6,11 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Admin') {
     exit();
 }
 
-// Connexion directe à la base de données
-$host = "localhost";       
-$dbname = "hopital";  
-$username = "root";         
-$password = "sio2024%";           
+// Connexion à la base de données
+$host = "localhost";
+$dbname = "hopital";
+$username = "root";
+$password = "sio2024%";
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
@@ -20,7 +20,7 @@ try {
     exit();
 }
 
-// Vérification de l'action demandée
+// Vérification de l'action
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
@@ -30,10 +30,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         modifierMedecin($pdo);
     } elseif ($action === "supprimer_medecin") {
         supprimerMedecin($pdo);
+    } elseif ($action === "ajouter_service") {
+        ajouterService($pdo);
+    } elseif ($action === "modifier_service") {
+        modifierService($pdo);
+    } elseif ($action === "supprimer_service") {
+        supprimerService($pdo);
     } else {
         echo json_encode(["status" => "error", "message" => "Action invalide."]);
     }
 }
+
+// --- Médecins ---
 
 function ajouterMedecin($pdo) {
     if (!isset($_POST['nom'], $_POST['prenom'], $_POST['identifiant'], $_POST['mdp'], $_POST['id_service'], $_POST['id_role'])) {
@@ -44,7 +52,7 @@ function ajouterMedecin($pdo) {
     $nom = $_POST['nom'];
     $prenom = $_POST['prenom'];
     $identifiant = $_POST['identifiant'];
-    $mdp = password_hash($_POST['mdp'], PASSWORD_BCRYPT); // Hash du mot de passe
+    $mdp = password_hash($_POST['mdp'], PASSWORD_BCRYPT);
     $id_service = $_POST['id_service'];
     $id_role = $_POST['id_role'];
 
@@ -100,6 +108,66 @@ function supprimerMedecin($pdo) {
         echo json_encode(["status" => "success", "message" => "Médecin supprimé avec succès."]);
     } catch (PDOException $e) {
         echo json_encode(["status" => "error", "message" => "Erreur: " . $e->getMessage()]);
+    }
+}
+
+// --- Services ---
+
+function ajouterService($pdo) {
+    if (!isset($_POST['nom'])) {
+        echo json_encode(["status" => "error", "message" => "Nom du service manquant."]);
+        return;
+    }
+
+    $nom = $_POST['nom'];
+
+    try {
+        $sql = "INSERT INTO Service (nom) VALUES (?)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$nom]);
+
+        echo json_encode(["status" => "success", "message" => "Service ajouté avec succès."]);
+    } catch (PDOException $e) {
+        echo json_encode(["status" => "error", "message" => "Erreur d'ajout : " . $e->getMessage()]);
+    }
+}
+
+function modifierService($pdo) {
+    if (!isset($_POST['id_service'], $_POST['nom'])) {
+        echo json_encode(["status" => "error", "message" => "Données manquantes pour modification."]);
+        return;
+    }
+
+    $id_service = $_POST['id_service'];
+    $nom = $_POST['nom'];
+
+    try {
+        $sql = "UPDATE Service SET nom = ? WHERE id_service = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$nom, $id_service]);
+
+        echo json_encode(["status" => "success", "message" => "Service modifié avec succès."]);
+    } catch (PDOException $e) {
+        echo json_encode(["status" => "error", "message" => "Erreur de modification : " . $e->getMessage()]);
+    }
+}
+
+function supprimerService($pdo) {
+    if (!isset($_POST['id_service'])) {
+        echo json_encode(["status" => "error", "message" => "ID service requis."]);
+        return;
+    }
+
+    $id_service = $_POST['id_service'];
+
+    try {
+        $sql = "DELETE FROM Service WHERE id_service = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$id_service]);
+
+        echo json_encode(["status" => "success", "message" => "Service supprimé avec succès."]);
+    } catch (PDOException $e) {
+        echo json_encode(["status" => "error", "message" => "Erreur de suppression : " . $e->getMessage()]);
     }
 }
 ?>
