@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Admin') {
+if ($_SESSION['role'] !== 'Admin') {
     header('Location: ../../');
     exit();
 }
@@ -10,25 +10,27 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Admin') {
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Panel Admin - Services - LPFS Clinique</title>
+    <title>Panel Admin - LPFS Clinique</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <h1>Gestion des Services</h1>
+    <h1>Bienvenue sur le Panel Admin</h1>
 
     <section>
-        <h2>Navigation</h2>
+        <h2>Gestion rapide</h2>
         <a href="ajout_medecin.php"><button>Ajouter un Médecin</button></a>
         <a href="suppression_medecin.php"><button>Supprimer un Médecin</button></a>
         <a href="../pages/PreAdmi/hospitalisation.php"><button>Ajouter une Pré-admission</button></a>
-        <a href="ajout_service.php"><button>Ajouter un Service</button></a>
+        <a href="ajout_service.php"><button>Ajouter un Services</button></a>
         <a href="admin_accueil.php"><button>Accueil</button></a>
     </section>
+</body>
 
     <!-- Services -->
     <section>
         <h2>Ajouter un Service</h2>
         <form id="form-ajout-service">
+            Id services: <input type="number" name="id_service" required><br>
             Nom du service: <input type="text" name="nom" required><br>
             <button type="submit">Ajouter</button>
         </form>
@@ -50,7 +52,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Admin') {
     <script>
         async function envoyerFormulaire(formId, action) {
             const form = document.getElementById(formId);
-            form.addEventListener('submit', async function(e) {
+            form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const formData = new FormData(form);
                 formData.append('action', action);
@@ -63,18 +65,15 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Admin') {
 
                     const result = await response.json();
                     alert(result.message);
-                    form.reset();
                 } catch (error) {
                     alert('Erreur lors de la requête.');
-                    console.error(error);
                 }
             });
         }
 
-        // Appels AJAX pour chaque formulaire
+        // Initialisation des formulaires
         envoyerFormulaire('form-ajout-service', 'ajouter_service');
         envoyerFormulaire('form-modif-service', 'modifier_service');
         envoyerFormulaire('form-suppr-service', 'supprimer_service');
     </script>
-</body>
 </html>
