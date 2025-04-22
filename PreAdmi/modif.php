@@ -45,7 +45,7 @@ session_start();
             error_reporting(E_ALL);
             $serveur = "localhost";
             $utilisateur = "root";
-            $motDePasse = "sio2024";
+            $motDePasse = "sio2024%";
             $nomBDD = "hopital";
             try {
                 $connexion = new PDO("mysql:host=$serveur;dbname=$nomBDD", $utilisateur, $motDePasse);
