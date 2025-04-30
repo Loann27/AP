@@ -23,6 +23,7 @@ if ($_SESSION['role'] !== 'Admin') {
         <a href="../pages/PreAdmi/hospitalisation.php"><button>Ajouter une Pré-admission</button></a>
         <a href="ajout_service.php"><button>Ajouter un Services</button></a>
         <a href="admin_accueil.php"><button>Accueil</button></a>
+        <a href="../pages/deconnexion.php"><button>Déconnexion</button></a>
     </section>
 </body>
 
@@ -30,21 +31,20 @@ if ($_SESSION['role'] !== 'Admin') {
     <section>
         <h2>Ajouter un Service</h2>
         <form id="form-ajout-service">
-            Id services: <input type="number" name="id_service" required><br>
             Nom du service: <input type="text" name="nom" required><br>
             <button type="submit">Ajouter</button>
         </form>
 
         <h2>Modifier un Service</h2>
         <form id="form-modif-service">
-            ID Service: <input type="number" name="id_service" required><br>
+            Ancien Nom: <input type="text" name="nom" required><br>
             Nouveau Nom: <input type="text" name="nom" required><br>
             <button type="submit">Modifier</button>
         </form>
 
         <h2>Supprimer un Service</h2>
         <form id="form-suppr-service">
-            ID Service: <input type="number" name="id_service" required><br>
+            Nom: <input type="text" name="nom" required><br>
             <button type="submit">Supprimer</button>
         </form>
     </section>
