@@ -24,6 +24,7 @@ session_start();
         <a href="ajout_service.php"><button>Ajouter un Services</button></a>
         <a href="../pages/PreAdmi/modif.php"><button>Modifier une Pré-admission</button></a>
         <a href="../pages/PreAdmi/suppr.php"><button>Supprimer une Pré-admission</button></a>
+        <a href="../pages/deconnexion.php"><button>Déconnexion</button></a>
     </section>
 
     <section>
