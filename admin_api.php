@@ -155,16 +155,13 @@ function modifierService($pdo) {
         echo json_encode(["status" => "error", "message" => "Données manquantes pour modification."]);
         return;
     }
-
-    $ancien_nom = $_POST['ancien_nom'];
-    $nouveau_nom = $_POST['nouveau_nom'];
     
     try {
         $sql = "UPDATE Services SET nom = :nouveau_nom WHERE nom = ancien_nom";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
-            'nouveau_nom' => $nouveau_nom,
-            'ancien_nom' => $ancien_nom
+            ':nouveau_nom' => $_POST['nouveau_nom'],
+            ':ancien_nom' => $_POST['ancien_nom']
         ]);
 
        if ($stmt->rowCount() > 0) {
