@@ -135,14 +135,14 @@ function ajouterService($pdo) {
         return;
     }
 
-    $id_service = $_POST['id_service'];
     $nom = $_POST['nom'];
     
     try {
-        $sql = "INSERT INTO Services (id_service, nom) VALUES (:id, ?)";
+        $sql = "INSERT INTO Services (nom) VALUES (:nom)";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':id', $id_service);
-        $stmt->execute([$nom]);
+        $stmt->execute([
+            'nom' => $nom
+        ]);
         
         echo json_encode(["status" => "success", "message" => "Service ajouté avec succès."]);
     } catch (PDOException $e) {
@@ -151,45 +151,52 @@ function ajouterService($pdo) {
 }
 
 function modifierService($pdo) {
-    if (!isset($_POST['id_service'], $_POST['nom'])) {
+    if (!isset($_POST['ancien_nom'], $_POST['nouveau_nom'])) {
         echo json_encode(["status" => "error", "message" => "Données manquantes pour modification."]);
         return;
     }
 
-    $id_service = $_POST['id_service'];
-    $nom = $_POST['nom'];
+    $ancien_nom = $_POST['ancien_nom'];
+    $nouveau_nom = $_POST['nouveau_nom'];
     
     try {
-        $sql = "UPDATE Services SET nom = ? WHERE id_service = ?";
+        $sql = "UPDATE Services SET nom = :nouveau_nom WHERE nom = ancien_nom";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$nom, $id_service]);
-        
-        echo json_encode(["status" => "success", "message" => "Service modifié avec succès."]);
+        $stmt->execute([
+            'nouveau_nom' => $nouveau_nom,
+            'ancien_nom' => $ancien_nom
+        ]);
+
+       if ($stmt->rowCount() > 0) {
+            echo json_encode(["status" => "success", "message" => "Service modifié avec succès."]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Aucun service trouvé avec ce nom."]);
+        }
     } catch (PDOException $e) {
         echo json_encode(["status" => "error", "message" => "Erreur de modification : " . $e->getMessage()]);
     }
 }
 
 function supprimerService($pdo) {
-    if (!isset($_POST['id_service'])) {
-        echo json_encode(["status" => "error", "message" => "ID service requis."]);
+    if (!isset($_POST['nom'])) {
+        echo json_encode(["status" => "error", "message" => "nom service requis."]);
         return;
     }
 
-    $id_service = $_POST['id_service'];
+    $nom = $_POST['nom'];
     
     try {
         // Vérifier si le service est utilisé par des professionnels
-        $check = $pdo->prepare("SELECT COUNT(*) FROM Professionnel WHERE id_service = ?");
-        $check->execute([$id_service]);
+        $check = $pdo->prepare("SELECT COUNT(*) FROM Professionnel WHERE nom = ?");
+        $check->execute([$nom]);
         if ($check->fetchColumn() > 0) {
             echo json_encode(["status" => "error", "message" => "Impossible de supprimer ce service : il est associé à des professionnels."]);
             return;
         }
         
-        $sql = "DELETE FROM Services WHERE id_service = ?";
+        $sql = "DELETE FROM Services WHERE nom = ?";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$id_service]);
+        $stmt->execute([$nom]);
         
         echo json_encode(["status" => "success", "message" => "Service supprimé avec succès."]);
     } catch (PDOException $e) {
