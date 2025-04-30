@@ -157,7 +157,7 @@ function modifierService($pdo) {
     }
     
     try {
-        $sql = "UPDATE Services SET nom = :nouveau_nom WHERE nom = ancien_nom";
+        $sql = "UPDATE Services SET nom = :nouveau_nom WHERE nom = :ancien_nom";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             ':nouveau_nom' => $_POST['nouveau_nom'],
