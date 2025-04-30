@@ -129,24 +129,30 @@ function supprimerMedecin($pdo) {
 }
 
 // --- Services ---
-function ajouterService($pdo) {
-    if (!isset($_POST['nom'])) {
-        echo json_encode(["status" => "error", "message" => "Nom du service manquant."]);
+function modifierService($pdo) {
+    if (!isset($_POST['ancien_nom'], $_POST['nouveau_nom'])) {
+        echo json_encode(["status" => "error", "message" => "Données manquantes pour modification."]);
         return;
     }
 
-    $nom = $_POST['nom'];
+    $ancien_nom = $_POST['ancien_nom'];
+    $nouveau_nom = $_POST['nouveau_nom'];
     
     try {
-        $sql = "INSERT INTO Services (nom) VALUES (:nom)";
+        $sql = "UPDATE Services SET nom = :nouveau_nom WHERE nom = :ancien_nom";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
-            'nom' => $nom
+            'nouveau_nom' => $nouveau_nom,
+            'ancien_nom' => $ancien_nom
         ]);
-        
-        echo json_encode(["status" => "success", "message" => "Service ajouté avec succès."]);
+
+       if ($stmt->rowCount() > 0) {
+            echo json_encode(["status" => "success", "message" => "Service modifié avec succès."]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Aucun service trouvé avec ce nom."]);
+        }
     } catch (PDOException $e) {
-        echo json_encode(["status" => "error", "message" => "Erreur d'ajout : " . $e->getMessage()]);
+        echo json_encode(["status" => "error", "message" => "Erreur de modification : " . $e->getMessage()]);
     }
 }
 
