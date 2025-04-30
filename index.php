@@ -110,7 +110,7 @@ error_reporting(E_ALL);
                 if($_SESSION['test'] == 1) {
                     $_SESSION['compte'] = $identifiant;
                     $_SESSION['role'] = 'Admin';
-                    header('Location: ./pages/reussi.php');
+                    header('Location: ./pages_admin/admin_accueil.php');
                 } else if($_SESSION['test'] == 4) {
                     $_SESSION['compte'] = $identifiant;
                     $_SESSION['role'] = 'Secrétaire';
