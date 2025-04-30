@@ -188,15 +188,7 @@ function supprimerService($pdo) {
 
     $nom = $_POST['nom'];
     
-    try {
-        // Vérifier si le service est utilisé par des professionnels
-        $check = $pdo->prepare("SELECT COUNT(*) FROM Professionnel WHERE nom = ?");
-        $check->execute([$nom]);
-        if ($check->fetchColumn() > 0) {
-            echo json_encode(["status" => "error", "message" => "Impossible de supprimer ce service : il est associé à des professionnels."]);
-            return;
-        }
-        
+    try {      
         $sql = "DELETE FROM Services WHERE nom = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$nom]);
@@ -206,4 +198,5 @@ function supprimerService($pdo) {
         echo json_encode(["status" => "error", "message" => "Erreur de suppression : " . $e->getMessage()]);
     }
 }
+?>
 ?>
