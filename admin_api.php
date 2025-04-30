@@ -134,33 +134,6 @@ function modifierService($pdo) {
         echo json_encode(["status" => "error", "message" => "Données manquantes pour modification."]);
         return;
     }
-
-    $ancien_nom = $_POST['ancien_nom'];
-    $nouveau_nom = $_POST['nouveau_nom'];
-    
-    try {
-        $sql = "UPDATE Services SET nom = :nouveau_nom WHERE nom = :ancien_nom";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            'nouveau_nom' => $nouveau_nom,
-            'ancien_nom' => $ancien_nom
-        ]);
-
-       if ($stmt->rowCount() > 0) {
-            echo json_encode(["status" => "success", "message" => "Service modifié avec succès."]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Aucun service trouvé avec ce nom."]);
-        }
-    } catch (PDOException $e) {
-        echo json_encode(["status" => "error", "message" => "Erreur de modification : " . $e->getMessage()]);
-    }
-}
-
-function modifierService($pdo) {
-    if (!isset($_POST['ancien_nom'], $_POST['nouveau_nom'])) {
-        echo json_encode(["status" => "error", "message" => "Données manquantes pour modification."]);
-        return;
-    }
     
     try {
         $sql = "UPDATE Services SET nom = :nouveau_nom WHERE nom = :ancien_nom";
@@ -182,7 +155,7 @@ function modifierService($pdo) {
 
 function supprimerService($pdo) {
     if (!isset($_POST['nom'])) {
-        echo json_encode(["status" => "error", "message" => "nom service requis."]);
+        echo "Nom du service requis";
         return;
     }
 
@@ -193,10 +166,11 @@ function supprimerService($pdo) {
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$nom]);
         
-        echo json_encode(["status" => "success", "message" => "Service supprimé avec succès."]);
+        echo "Service supprimé avec succès.";
     } catch (PDOException $e) {
-        echo json_encode(["status" => "error", "message" => "Erreur de suppression : " . $e->getMessage()]);
+        echo "Erreur de suppression : " . $e->getMessage();
     }
 }
+?>
 ?>
 ?>
