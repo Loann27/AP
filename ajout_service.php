@@ -37,8 +37,8 @@ if ($_SESSION['role'] !== 'Admin') {
 
         <h2>Modifier un Service</h2>
         <form id="form-modif-service">
-            Ancien Nom: <input type="text" name="nom" required><br>
-            Nouveau Nom: <input type="text" name="nom" required><br>
+            Ancien Nom: <input type="text" name="ancien_nom" required><br>
+            Nouveau Nom: <input type="text" name="nouveau_nom" required><br>
             <button type="submit">Modifier</button>
         </form>
 
