@@ -129,6 +129,28 @@ function supprimerMedecin($pdo) {
 }
 
 // --- Services ---
+function ajouterService($pdo) {
+    if (!isset($_POST['nom'])) {
+        echo json_encode(["status" => "error", "message" => "Nom du service manquant."]);
+        return;
+    }
+
+    $nom = $_POST['nom'];
+    
+    try {
+        $sql = "INSERT INTO Services (nom) VALUES (:nom)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            'nom' => $nom
+        ]);
+        
+        echo json_encode(["status" => "success", "message" => "Service ajouté avec succès."]);
+    } catch (PDOException $e) {
+        echo json_encode(["status" => "error", "message" => "Erreur d'ajout : " . $e->getMessage()]);
+    }
+}
+
+// --- Services ---
 function modifierService($pdo) {
     if (!isset($_POST['ancien_nom'], $_POST['nouveau_nom'])) {
         echo json_encode(["status" => "error", "message" => "Données manquantes pour modification."]);
